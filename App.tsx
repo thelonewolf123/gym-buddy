@@ -1,14 +1,12 @@
-import { Box, NativeBaseProvider } from 'native-base'
-import { SafeAreaView } from 'react-native'
+import { NativeBaseProvider } from 'native-base'
 
-import { Index } from './view'
+import { Index } from './src/view'
+import { Login } from './src/view/login'
 
 export default function App() {
     return (
         <NativeBaseProvider>
-            <SafeAreaView>
-                <Index />
-            </SafeAreaView>
+            <Login />
         </NativeBaseProvider>
     )
 }
