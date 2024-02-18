@@ -11,7 +11,7 @@ import {
     VStack
 } from 'native-base'
 
-export const Login = () => {
+const Login = () => {
     return (
         <Center w="100%">
             <Box safeArea p="2" py="8" w="90%" maxW="290">
@@ -76,7 +76,7 @@ export const Login = () => {
                                 fontWeight: 'medium',
                                 fontSize: 'sm'
                             }}
-                            href="#"
+                            href="/login"
                         >
                             Sign Up
                         </Link>
@@ -86,3 +86,5 @@ export const Login = () => {
         </Center>
     )
 }
+
+export default Login

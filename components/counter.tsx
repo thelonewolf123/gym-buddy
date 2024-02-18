@@ -1,7 +1,6 @@
 import { Button, Container, Text } from 'native-base'
-// App.js
 import React, { useState } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 
 export function Counter() {
     const [sets, setSets] = useState(0)
