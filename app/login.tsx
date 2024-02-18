@@ -1,3 +1,4 @@
+import { Link, router } from 'expo-router'
 import {
     Box,
     Button,
@@ -6,12 +7,35 @@ import {
     Heading,
     HStack,
     Input,
-    Link,
+    Spinner,
     Text,
+    Toast,
     VStack
 } from 'native-base'
+import { useState } from 'react'
+
+import { login } from '../service/account'
 
 const Login = () => {
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [loading, setLoading] = useState(false)
+
+    const handleLogin = () => {
+        setLoading(true)
+        login({ email, password })
+            .then(() => {
+                router.push('/')
+                setLoading(false)
+            })
+            .catch(() => {
+                Toast.show({
+                    title: 'Invalid credentials'
+                })
+                setLoading(false)
+            })
+    }
+
     return (
         <Center w="100%">
             <Box safeArea p="2" py="8" w="90%" maxW="290">
@@ -40,25 +64,18 @@ const Login = () => {
                 <VStack space={3} mt="5">
                     <FormControl>
                         <FormControl.Label>Email ID</FormControl.Label>
-                        <Input />
+                        <Input onChange={(e) => setEmail(e.nativeEvent.text)} />
                     </FormControl>
                     <FormControl>
                         <FormControl.Label>Password</FormControl.Label>
-                        <Input type="password" />
-                        <Link
-                            _text={{
-                                fontSize: 'xs',
-                                fontWeight: '500',
-                                color: 'indigo.500'
-                            }}
-                            alignSelf="flex-end"
-                            mt="1"
-                        >
-                            Forget Password?
-                        </Link>
+                        <Input
+                            type="password"
+                            onChange={(e) => setPassword(e.nativeEvent.text)}
+                        />
+                        <Link href={'/forget-password'}>Forget Password?</Link>
                     </FormControl>
-                    <Button mt="2" colorScheme="indigo">
-                        Sign in
+                    <Button mt="2" colorScheme="indigo" onPress={handleLogin}>
+                        {loading ? <Spinner /> : <Text>Sign in</Text>}
                     </Button>
                     <HStack mt="6" justifyContent="center">
                         <Text
@@ -70,16 +87,7 @@ const Login = () => {
                         >
                             I'm a new user.{' '}
                         </Text>
-                        <Link
-                            _text={{
-                                color: 'indigo.500',
-                                fontWeight: 'medium',
-                                fontSize: 'sm'
-                            }}
-                            href="/login"
-                        >
-                            Sign Up
-                        </Link>
+                        <Link href="/signup">Sign Up</Link>
                     </HStack>
                 </VStack>
             </Box>
