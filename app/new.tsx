@@ -119,8 +119,8 @@ export default function New() {
                     </FormControl>
 
                     <FormControl mt="2" mb="4">
-                        <Button onPress={handleSubmit}>
-                            {loading ? <Spinner /> : 'Submit'}
+                        <Button onPress={handleSubmit} isLoading={loading}>
+                            Submit
                         </Button>
                     </FormControl>
                 </Box>
