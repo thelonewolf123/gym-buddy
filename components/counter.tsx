@@ -2,7 +2,9 @@ import { Button, Container, Text } from 'native-base'
 import React, { useState } from 'react'
 import { View } from 'react-native'
 
-export function Counter() {
+import { Workout } from '../service/workout'
+
+export const Counter: React.FC<{ workout: Workout }> = ({ workout }) => {
     const [sets, setSets] = useState(0)
 
     const incrementSets = () => {

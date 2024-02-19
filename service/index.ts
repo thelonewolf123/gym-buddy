@@ -7,4 +7,7 @@ const store = new AsyncAuthStore({
     initial: AsyncStorage.getItem('pb_auth')
 })
 
-export const pb = new PocketBase(process.env.POCKETBASE_URL, store)
+export const pb = new PocketBase(
+    'https://pocketbase-production-8906.up.railway.app',
+    store
+)

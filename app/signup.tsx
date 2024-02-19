@@ -27,7 +27,7 @@ const SignUp = () => {
         setLoading(true)
         createAccount({ username, name, email, password, passwordConfirm })
             .then(() => {
-                router.push('/')
+                router.replace('/')
                 setLoading(false)
             })
             .catch((err) => {

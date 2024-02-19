@@ -25,7 +25,7 @@ const Login = () => {
         setLoading(true)
         login(email, password)
             .then(() => {
-                router.push('/')
+                router.replace('/')
                 setLoading(false)
             })
             .catch((err) => {
@@ -88,7 +88,17 @@ const Login = () => {
                         >
                             I'm a new user.{' '}
                         </Text>
-                        <Link href="/signup">Sign Up</Link>
+                        <Link href="/signup">
+                            <Text
+                                fontSize="sm"
+                                color="blue.500"
+                                _dark={{
+                                    color: 'blue.300'
+                                }}
+                            >
+                                Sign Up
+                            </Text>
+                        </Link>
                     </HStack>
                 </VStack>
             </Box>

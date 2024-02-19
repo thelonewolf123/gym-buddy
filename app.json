@@ -30,5 +30,5 @@
       "expo-router"
     ]
   },
-  "scheme": "set-counter"
+  "scheme": "gymcounter"
 }

@@ -17,7 +17,7 @@ export const Navigation: React.FC<{ children: React.ReactElement }> = ({
         <Box flex={1} bg="white" safeAreaTop width="100%" alignSelf="center">
             {children}
             <HStack
-                bg="indigo.600"
+                bg="primary.500"
                 alignItems="center"
                 safeAreaBottom
                 shadow={6}
@@ -46,24 +46,6 @@ export const Navigation: React.FC<{ children: React.ReactElement }> = ({
                             size="sm"
                         />
                         <Text fontSize="12">Home</Text>
-                    </Center>
-                </Pressable>
-                <Pressable
-                    opacity={pathname === '/history' ? 1 : 0.5}
-                    py="2"
-                    flex={1}
-                    onPress={() => {
-                        router.replace('/history')
-                    }}
-                >
-                    <Center>
-                        <Icon
-                            mb="1"
-                            as={<MaterialIcons name="history" />}
-                            color="white"
-                            size="sm"
-                        />
-                        <Text fontSize="12">History</Text>
                     </Center>
                 </Pressable>
                 <Pressable
