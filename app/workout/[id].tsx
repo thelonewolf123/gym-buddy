@@ -17,9 +17,5 @@ export default function WorkoutId() {
         })
     }, [])
 
-    return (
-        <View className="flex items-center justify-center w-full h-full">
-            {workout ? <Counter workout={workout} /> : <Spinner />}
-        </View>
-    )
+    return <View>{workout ? <Counter workout={workout} /> : <Spinner />}</View>
 }

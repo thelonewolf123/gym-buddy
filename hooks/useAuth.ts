@@ -36,6 +36,30 @@ export default function useAuth() {
             passwordConfirm: string
             name: string
         }) => {
+            if (password !== passwordConfirm) {
+                throw new Error('Passwords do not match')
+            }
+
+            if (password.length < 6) {
+                throw new Error('Password must be at least 6 characters')
+            }
+
+            if (username.length < 3) {
+                throw new Error('Username must be at least 3 characters')
+            }
+
+            if (name.length < 3) {
+                throw new Error('Name must be at least 3 characters')
+            }
+
+            if (email.length < 3) {
+                throw new Error('Email must be at least 3 characters')
+            }
+
+            if (email.indexOf('@') === -1) {
+                throw new Error('Email must be valid')
+            }
+
             await pb.collection('users').create({
                 username,
                 email,

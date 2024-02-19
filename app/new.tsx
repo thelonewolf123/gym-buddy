@@ -113,6 +113,7 @@ export default function New() {
                                 handleChange('notes', value)
                             }
                             style={{ height: 100 }}
+                            pt={4}
                             autoCompleteType={'off'}
                         />
                     </FormControl>

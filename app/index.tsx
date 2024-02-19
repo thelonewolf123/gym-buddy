@@ -9,11 +9,9 @@ import {
     ScrollView,
     Spinner,
     Text,
-    View,
     VStack
 } from 'native-base'
 import { useEffect, useState } from 'react'
-import { Pressable } from 'react-native'
 
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 
@@ -22,16 +20,17 @@ import { getWorkouts, Workout } from '../service/workout'
 
 export default function Index() {
     const [workoutList, setWorkoutList] = useState<Workout[]>([])
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
+    const { user } = useAuth()
+
     useEffect(() => {
+        if (!user) return
+
         getWorkouts().then((workouts) => {
             setWorkoutList(workouts.items)
-            console.log(workouts.items)
             setLoading(false)
         })
     }, [])
-
-    const { user } = useAuth()
 
     if (!user) {
         return <Redirect href={'/login'} />
@@ -43,7 +42,7 @@ export default function Index() {
                 renderInPortal={false}
                 shadow={2}
                 size="sm"
-                icon={<MaterialCommunityIcons name="plus" />}
+                icon={<MaterialCommunityIcons name="plus" color={'white'} />}
                 onPress={() => router.replace('/new')}
             />
 

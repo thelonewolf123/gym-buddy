@@ -7,6 +7,7 @@ import {
     Heading,
     Input,
     ScrollView,
+    Text,
     Toast,
     VStack
 } from 'native-base'
@@ -40,8 +41,8 @@ const SignUp = () => {
     }
 
     return (
-        <Center w="100%">
-            <ScrollView w="100%" h="100%" bg="white" p="2" py="8">
+        <ScrollView w="100%" h="100%" bg="white" p="2" py="4">
+            <Center w="100%">
                 <Box p="2" w="90%" py="8">
                     <Heading
                         size="lg"
@@ -110,12 +111,12 @@ const SignUp = () => {
                             colorScheme="indigo"
                             onPress={handleSignUp}
                         >
-                            Sign up
+                            <Text className="text-white">Sign up</Text>
                         </Button>
                     </VStack>
                 </Box>
-            </ScrollView>
-        </Center>
+            </Center>
+        </ScrollView>
     )
 }
 

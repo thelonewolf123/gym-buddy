@@ -73,10 +73,14 @@ const Login = () => {
                             type="password"
                             onChange={(e) => setPassword(e.nativeEvent.text)}
                         />
-                        <Link href={'/forget-password'}>Forget Password?</Link>
                     </FormControl>
-                    <Button mt="2" colorScheme="indigo" onPress={handleLogin}>
-                        {loading ? <Spinner /> : <Text>Sign in</Text>}
+                    <Button
+                        mt="2"
+                        colorScheme="indigo"
+                        onPress={handleLogin}
+                        isLoading={loading}
+                    >
+                        <Text className="text-white">Sign in</Text>
                     </Button>
                     <HStack mt="6" justifyContent="center">
                         <Text
