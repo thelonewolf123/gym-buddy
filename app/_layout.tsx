@@ -1,8 +1,6 @@
 import { Stack } from 'expo-router/stack'
-import { Fab, Icon, NativeBaseProvider } from 'native-base'
+import { NativeBaseProvider } from 'native-base'
 import React from 'react'
-
-import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 import { Navigation } from '../components/navigation'
 
@@ -12,13 +10,6 @@ const Layout: React.FC<{}> = () => {
             <Navigation>
                 <Stack />
             </Navigation>
-
-            <Fab
-                renderInPortal={false}
-                shadow={2}
-                size="sm"
-                icon={<MaterialCommunityIcons name="plus" />}
-            />
         </NativeBaseProvider>
     )
 }

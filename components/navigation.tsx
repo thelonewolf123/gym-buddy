@@ -1,4 +1,4 @@
-import { router } from 'expo-router'
+import { router, usePathname } from 'expo-router'
 import { Box, Center, HStack, Icon, Pressable, Text } from 'native-base'
 import React, { useState } from 'react'
 
@@ -7,7 +7,11 @@ import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
 export const Navigation: React.FC<{ children: React.ReactElement }> = ({
     children
 }) => {
-    const [selected, setSelected] = useState(0)
+    const pathname = usePathname()
+
+    if (pathname === '/signup' || pathname === '/login') {
+        return children
+    }
 
     return (
         <Box flex={1} bg="white" safeAreaTop width="100%" alignSelf="center">
@@ -19,12 +23,11 @@ export const Navigation: React.FC<{ children: React.ReactElement }> = ({
                 shadow={6}
             >
                 <Pressable
-                    opacity={selected === 0 ? 1 : 0.5}
+                    opacity={pathname === '/' ? 1 : 0.5}
                     py="3"
                     flex={1}
                     onPress={() => {
-                        setSelected(0)
-                        router.push('/')
+                        router.replace('/')
                     }}
                 >
                     <Center>
@@ -33,7 +36,9 @@ export const Navigation: React.FC<{ children: React.ReactElement }> = ({
                             as={
                                 <MaterialCommunityIcons
                                     name={
-                                        selected === 0 ? 'home' : 'home-outline'
+                                        pathname === '/'
+                                            ? 'home'
+                                            : 'home-outline'
                                     }
                                 />
                             }
@@ -44,12 +49,11 @@ export const Navigation: React.FC<{ children: React.ReactElement }> = ({
                     </Center>
                 </Pressable>
                 <Pressable
-                    opacity={selected === 1 ? 1 : 0.5}
+                    opacity={pathname === '/history' ? 1 : 0.5}
                     py="2"
                     flex={1}
                     onPress={() => {
-                        setSelected(1)
-                        router.push('/history')
+                        router.replace('/history')
                     }}
                 >
                     <Center>
@@ -63,12 +67,11 @@ export const Navigation: React.FC<{ children: React.ReactElement }> = ({
                     </Center>
                 </Pressable>
                 <Pressable
-                    opacity={selected === 2 ? 1 : 0.6}
+                    opacity={pathname === '/account' ? 1 : 0.6}
                     py="2"
                     flex={1}
                     onPress={() => {
-                        setSelected(2)
-                        router.push('/account')
+                        router.replace('/account')
                     }}
                 >
                     <Center>

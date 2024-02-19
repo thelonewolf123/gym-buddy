@@ -14,21 +14,22 @@ import {
 } from 'native-base'
 import { useState } from 'react'
 
-import { login } from '../service/account'
+import useAuth from '../hooks/useAuth'
 
 const Login = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [loading, setLoading] = useState(false)
-
+    const { login } = useAuth()
     const handleLogin = () => {
         setLoading(true)
-        login({ email, password })
+        login(email, password)
             .then(() => {
                 router.push('/')
                 setLoading(false)
             })
-            .catch(() => {
+            .catch((err) => {
+                console.error(err.originalError)
                 Toast.show({
                     title: 'Invalid credentials'
                 })
