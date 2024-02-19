@@ -21,8 +21,7 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "package": "com.thelonewolf123.setcounter"
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -37,7 +36,7 @@
       "eas": {
         "projectId": "67494a68-c663-4976-925c-af1a3d84b69f"
       }
-    }
-  },
-  "scheme": "gymcounter"
+    },
+    "scheme": "gymcounter"
+  }
 }
