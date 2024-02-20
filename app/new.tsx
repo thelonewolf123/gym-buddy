@@ -4,11 +4,8 @@ import {
     Button,
     Center,
     FormControl,
-    Heading,
     Input,
     ScrollView,
-    Spinner,
-    Text,
     TextArea
 } from 'native-base'
 import React, { useState } from 'react'

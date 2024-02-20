@@ -23,7 +23,9 @@ export function createWorkout(params: WorkoutInput, userId: string) {
 }
 
 export function getWorkouts() {
-    return pb.collection<Workout>('workouts').getList()
+    return pb.collection<Workout>('workouts').getList(1, 50, {
+        sort: '-created'
+    })
 }
 
 export function getWorkout(id: string) {

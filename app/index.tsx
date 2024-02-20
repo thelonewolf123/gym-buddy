@@ -1,4 +1,4 @@
-import { Redirect, router, Stack } from 'expo-router'
+import { Redirect, router, Stack, usePathname } from 'expo-router'
 import { capitalize } from 'lodash'
 import {
     Center,
@@ -22,6 +22,7 @@ export default function Index() {
     const [workoutList, setWorkoutList] = useState<Workout[]>([])
     const [loading, setLoading] = useState(true)
     const { user } = useAuth()
+    const pathname = usePathname()
 
     useEffect(() => {
         if (!user) return
@@ -30,10 +31,19 @@ export default function Index() {
             setWorkoutList(workouts.items)
             setLoading(false)
         })
-    }, [])
+    }, [pathname, user])
 
     if (!user) {
         return <Redirect href={'/login'} />
+    }
+
+    const formatName = (name: string) => {
+        name = capitalize(name).slice(0, 15)
+        if (name.length < 15) {
+            return name
+        }
+        name = name.trim()
+        return name + '...'
     }
 
     return (
@@ -78,7 +88,7 @@ export default function Index() {
                                 >
                                     <VStack className="flex flex-col gap-1">
                                         <Heading>
-                                            {capitalize(workout.name)}
+                                            {formatName(workout.name)}
                                         </Heading>
                                         <Text
                                             color={'coolGray.400'}
