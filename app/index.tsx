@@ -1,4 +1,4 @@
-import { Redirect, router } from 'expo-router'
+import { Redirect, router, Stack } from 'expo-router'
 import { capitalize } from 'lodash'
 import {
     Center,
@@ -38,6 +38,11 @@ export default function Index() {
 
     return (
         <>
+            <Stack.Screen
+                options={{
+                    headerTitle: 'Home'
+                }}
+            ></Stack.Screen>
             <Fab
                 renderInPortal={false}
                 shadow={2}
@@ -45,7 +50,6 @@ export default function Index() {
                 icon={<MaterialCommunityIcons name="plus" color={'white'} />}
                 onPress={() => router.replace('/new')}
             />
-
             <ScrollView w="100%">
                 {loading ? (
                     <Center h={'100%'} w="100%">

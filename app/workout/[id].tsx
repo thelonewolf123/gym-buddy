@@ -1,4 +1,4 @@
-import { useLocalSearchParams, useRouter } from 'expo-router'
+import { Stack, useLocalSearchParams, useRouter } from 'expo-router'
 import { Spinner, View } from 'native-base'
 import { useEffect, useState } from 'react'
 
@@ -17,5 +17,14 @@ export default function WorkoutId() {
         })
     }, [])
 
-    return <View>{workout ? <Counter workout={workout} /> : <Spinner />}</View>
+    return (
+        <>
+            <Stack.Screen
+                options={{
+                    headerTitle: 'Workout Details'
+                }}
+            ></Stack.Screen>
+            <View>{workout ? <Counter workout={workout} /> : <Spinner />}</View>
+        </>
+    )
 }

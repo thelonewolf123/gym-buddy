@@ -1,19 +1,12 @@
 import { capitalize } from 'lodash'
-import {
-    Button,
-    Center,
-    Container,
-    Heading,
-    HStack,
-    Spinner,
-    Text
-} from 'native-base'
+import { Button, Center, Heading, HStack, Text } from 'native-base'
 import React, { useState } from 'react'
 import { View } from 'react-native'
 
 import {
     decrementWorkoutSet,
     incrementWorkoutSet,
+    markWorkoutAsComplete,
     Workout
 } from '../service/workout'
 
@@ -21,6 +14,8 @@ export const Counter: React.FC<{ workout: Workout }> = ({ workout }) => {
     const [sets, setSets] = useState(workout.set)
     const [loadingAdd, setLoadingAdd] = useState(false)
     const [loadingSub, setLoadingSub] = useState(false)
+    const [loadingComplete, setLoadingComplete] = useState(false)
+    const [completed, setCompleted] = useState(workout.completed)
 
     const incrementSets = () => {
         if (loadingAdd || loadingSub) return
@@ -40,6 +35,15 @@ export const Counter: React.FC<{ workout: Workout }> = ({ workout }) => {
         })
     }
 
+    const markComplete = () => {
+        if (loadingComplete) return
+        setLoadingComplete(true)
+        markWorkoutAsComplete(workout.id).then(() => {
+            setCompleted(true)
+            setLoadingComplete(false)
+        })
+    }
+
     return (
         <Center mt="4">
             <Heading>{capitalize(workout.name)}</Heading>
@@ -49,7 +53,7 @@ export const Counter: React.FC<{ workout: Workout }> = ({ workout }) => {
                     <Button
                         colorScheme={'blue'}
                         onPress={incrementSets}
-                        isDisabled={sets >= workout.totalSets}
+                        isDisabled={sets >= workout.totalSets || completed}
                         isLoading={loadingAdd}
                     >
                         <HStack>
@@ -59,13 +63,25 @@ export const Counter: React.FC<{ workout: Workout }> = ({ workout }) => {
                     <Button
                         colorScheme={'red'}
                         onPress={decrementSets}
-                        isDisabled={sets <= 0}
+                        isDisabled={sets <= 0 || completed}
                         isLoading={loadingSub}
                     >
                         <HStack>
                             <Text className="text-white">Decrement (-)</Text>
                         </HStack>
                     </Button>
+
+                    {sets >= workout.totalSets && !completed && (
+                        <Button
+                            colorScheme={'green'}
+                            onPress={markComplete}
+                            isLoading={loadingComplete}
+                        >
+                            <HStack>
+                                <Text className="text-white">Complete</Text>
+                            </HStack>
+                        </Button>
+                    )}
                 </View>
             </View>
         </Center>

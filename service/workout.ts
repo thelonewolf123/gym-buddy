@@ -6,17 +6,20 @@ export type WorkoutInput = {
     set: number
     totalSets: number
     notes: string
+    completed?: boolean
 }
 
 export type Workout = WorkoutInput & {
-    userId: string
+    user: string
     id: string
     created: string
     updated: string
 }
 
-export function createWorkout(params: WorkoutInput) {
-    return pb.collection('workouts').create(params)
+export function createWorkout(params: WorkoutInput, userId: string) {
+    return pb
+        .collection<Workout>('workouts')
+        .create({ ...params, user: userId, completed: false })
 }
 
 export function getWorkouts() {
@@ -44,5 +47,11 @@ export function incrementWorkoutSet(id: string) {
 export function decrementWorkoutSet(id: string) {
     return pb.collection<Workout>('workouts').update(id, {
         'set-': 1
+    })
+}
+
+export function markWorkoutAsComplete(id: string) {
+    return pb.collection<Workout>('workouts').update(id, {
+        completed: true
     })
 }

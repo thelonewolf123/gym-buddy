@@ -1,6 +1,6 @@
 import { router, usePathname } from 'expo-router'
 import { Box, Center, HStack, Icon, Pressable, Text } from 'native-base'
-import React, { useState } from 'react'
+import React from 'react'
 
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
 
@@ -33,15 +33,7 @@ export const Navigation: React.FC<{ children: React.ReactElement }> = ({
                     <Center>
                         <Icon
                             mb="1"
-                            as={
-                                <MaterialCommunityIcons
-                                    name={
-                                        pathname === '/'
-                                            ? 'home'
-                                            : 'home-outline'
-                                    }
-                                />
-                            }
+                            as={<MaterialCommunityIcons name={'home'} />}
                             color="white"
                             size="sm"
                         />

@@ -1,14 +1,15 @@
-import { Stack } from 'expo-router/stack'
-import { NativeBaseProvider } from 'native-base'
+import { Stack } from 'expo-router'
+import { Box, NativeBaseProvider } from 'native-base'
 import React from 'react'
 
 import { Navigation } from '../components/navigation'
+import Index from './'
 
 const Layout: React.FC<{}> = () => {
     return (
         <NativeBaseProvider>
             <Navigation>
-                <Stack />
+                <Stack initialRouteName="Home" />
             </Navigation>
         </NativeBaseProvider>
     )
