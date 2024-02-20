@@ -22,8 +22,8 @@ export function createWorkout(params: WorkoutInput, userId: string) {
         .create({ ...params, user: userId, completed: false })
 }
 
-export function getWorkouts() {
-    return pb.collection<Workout>('workouts').getList(1, 50, {
+export function getWorkouts(page: number = 1, limit: number = 50000) {
+    return pb.collection<Workout>('workouts').getList(page, limit, {
         sort: '-created'
     })
 }
