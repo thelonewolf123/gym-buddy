@@ -1,4 +1,4 @@
-import { Link, router, Stack } from 'expo-router'
+import { Link, Redirect, router, Stack } from 'expo-router'
 import {
     Box,
     Button,
@@ -20,7 +20,7 @@ const Login = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [loading, setLoading] = useState(false)
-    const { login } = useAuth()
+    const { login, user } = useAuth()
     const handleLogin = () => {
         setLoading(true)
         login(email, password)
@@ -35,6 +35,10 @@ const Login = () => {
                 })
                 setLoading(false)
             })
+    }
+
+    if (user) {
+        return <Redirect href={'/'} />
     }
 
     return (

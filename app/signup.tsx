@@ -35,7 +35,7 @@ const SignUp = () => {
             .catch((err) => {
                 console.error(err.originalError)
                 Toast.show({
-                    title: 'Invalid credentials'
+                    title: err.originalError
                 })
                 setLoading(false)
             })
