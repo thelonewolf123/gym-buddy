@@ -1,9 +1,9 @@
 import { Box, Center, Heading, Text, View } from 'native-base'
 import { useMemo, useRef, useState } from 'react'
 
-import { Workout } from '../service/workout'
+import { WorkoutType } from '../service/workout'
 
-export const Analytics: React.FC<{ workout: Workout }> = ({ workout }) => {
+export const Analytics: React.FC<{ workout: WorkoutType }> = ({ workout }) => {
     const getDuration = () => {
         const start = new Date(workout.created).getTime()
         const end = workout.completed

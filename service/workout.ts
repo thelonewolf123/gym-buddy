@@ -9,7 +9,7 @@ export type WorkoutInput = {
     completed?: boolean
 }
 
-export type Workout = WorkoutInput & {
+export type WorkoutType = WorkoutInput & {
     user: string
     id: string
     created: string
@@ -18,42 +18,42 @@ export type Workout = WorkoutInput & {
 
 export function createWorkout(params: WorkoutInput, userId: string) {
     return pb
-        .collection<Workout>('workouts')
+        .collection<WorkoutType>('workouts')
         .create({ ...params, user: userId, completed: false })
 }
 
 export function getWorkouts(page: number = 1, limit: number = 50000) {
-    return pb.collection<Workout>('workouts').getList(page, limit, {
+    return pb.collection<WorkoutType>('workouts').getList(page, limit, {
         sort: '-created'
     })
 }
 
 export function getWorkout(id: string) {
-    return pb.collection<Workout>('workouts').getOne(id)
+    return pb.collection<WorkoutType>('workouts').getOne(id)
 }
 
 export function updateWorkout(id: string, params: Partial<WorkoutInput>) {
-    return pb.collection<Workout>('workouts').update(id, params)
+    return pb.collection<WorkoutType>('workouts').update(id, params)
 }
 
 export function deleteWorkout(id: string) {
-    return pb.collection<Workout>('workouts').delete(id)
+    return pb.collection<WorkoutType>('workouts').delete(id)
 }
 
 export function incrementWorkoutSet(id: string) {
-    return pb.collection<Workout>('workouts').update(id, {
+    return pb.collection<WorkoutType>('workouts').update(id, {
         'set+': 1
     })
 }
 
 export function decrementWorkoutSet(id: string) {
-    return pb.collection<Workout>('workouts').update(id, {
+    return pb.collection<WorkoutType>('workouts').update(id, {
         'set-': 1
     })
 }
 
 export function markWorkoutAsComplete(id: string) {
-    return pb.collection<Workout>('workouts').update(id, {
+    return pb.collection<WorkoutType>('workouts').update(id, {
         completed: true
     })
 }

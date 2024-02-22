@@ -6,10 +6,10 @@ import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 import { Analytics } from '../../components/analytics'
 import { Counter } from '../../components/counter'
-import { deleteWorkout, getWorkout, Workout } from '../../service/workout'
+import { deleteWorkout, getWorkout, WorkoutType } from '../../service/workout'
 
 export default function WorkoutId() {
-    const [workout, setWorkout] = useState<Workout | null>(null)
+    const [workout, setWorkout] = useState<WorkoutType | null>(null)
 
     const params = useLocalSearchParams()
     const id = useMemo(() => {

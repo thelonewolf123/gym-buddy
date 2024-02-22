@@ -11,11 +11,15 @@ import {
 import React, { useState } from 'react'
 import { TextInput, View } from 'react-native'
 
+import { WorkoutRealmContext } from '../database/realm.db'
 import useAuth from '../hooks/useAuth'
 import { createWorkout, WorkoutInput } from '../service/workout'
 
+const { useRealm } = WorkoutRealmContext
+
 export default function New() {
     const { user } = useAuth()
+    const realm = useRealm()
 
     const [workout, setWorkout] = useState<WorkoutInput>({
         name: '',

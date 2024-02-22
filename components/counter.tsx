@@ -7,13 +7,13 @@ import {
     decrementWorkoutSet,
     incrementWorkoutSet,
     markWorkoutAsComplete,
-    Workout
+    WorkoutType
 } from '../service/workout'
 
-export const Counter: React.FC<{ workout: Workout; refresh: () => void }> = ({
-    workout,
-    refresh
-}) => {
+export const Counter: React.FC<{
+    workout: WorkoutType
+    refresh: () => void
+}> = ({ workout, refresh }) => {
     const [sets, setSets] = useState(workout.set)
     const [loadingAdd, setLoadingAdd] = useState(false)
     const [loadingSub, setLoadingSub] = useState(false)
