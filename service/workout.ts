@@ -47,24 +47,6 @@ export function deleteWorkout(id: string) {
     return pb.collection<WorkoutType>('workouts').delete(id)
 }
 
-export function incrementWorkoutSet(id: string) {
-    return pb.collection<WorkoutType>('workouts').update(id, {
-        'set+': 1
-    })
-}
-
-export function decrementWorkoutSet(id: string) {
-    return pb.collection<WorkoutType>('workouts').update(id, {
-        'set-': 1
-    })
-}
-
-export function markWorkoutAsComplete(id: string) {
-    return pb.collection<WorkoutType>('workouts').update(id, {
-        completed: true
-    })
-}
-
 export function pushToServer(workout: WorkoutType) {
     const { temp, ...rest } = workout
     console.log('Pushing to server', rest)
