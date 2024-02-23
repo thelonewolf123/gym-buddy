@@ -1,5 +1,5 @@
 import { router } from 'expo-router'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 
 import { pb } from '../service'
 
@@ -11,10 +11,13 @@ export type UserType = {
 }
 
 export default function useAuth() {
-    const user = pb.authStore.model as UserType | null
+    const [user, setState] = useState<UserType | null>(
+        pb.authStore.model as UserType | null
+    )
 
     const login = useCallback(async (email: string, password: string) => {
         await pb.collection('users').authWithPassword(email, password)
+        setState(pb.authStore.model as UserType)
     }, [])
 
     const logout = useCallback(async () => {
@@ -67,6 +70,7 @@ export default function useAuth() {
                 passwordConfirm,
                 name
             })
+            await login(email, password)
         },
         []
     )
