@@ -1,20 +1,22 @@
 import { Stack } from 'expo-router'
-import { Box, NativeBaseProvider } from 'native-base'
-import React from 'react'
-
-import { RealmProvider } from '@realm/react'
+import { NativeBaseProvider } from 'native-base'
+import React, { useMemo } from 'react'
 
 import { Navigation } from '../components/navigation'
-import Index from './'
+import RealmInit from '../components/realm-init'
+import { WorkoutRealmContext } from '../database/realm.db'
 
 const Layout: React.FC<{}> = () => {
+    const { RealmProvider } = useMemo(() => WorkoutRealmContext, [])
+
     return (
         <NativeBaseProvider>
             <RealmProvider>
-                <Navigation>
-                    <Stack initialRouteName="Home" />
-                </Navigation>
+                <RealmInit />
             </RealmProvider>
+            <Navigation>
+                <Stack initialRouteName="Home" />
+            </Navigation>
         </NativeBaseProvider>
     )
 }

@@ -16,11 +16,13 @@ import { useEffect, useState } from 'react'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 import useAuth from '../hooks/useAuth'
+import useWorkout from '../hooks/useWorkout'
 import { getWorkouts, WorkoutType } from '../service/workout'
 
 export default function Index() {
     const [workoutList, setWorkoutList] = useState<WorkoutType[]>([])
     const [loading, setLoading] = useState(true)
+    const getWorkouts = useWorkout((s) => s.getWorkouts)
     const { user } = useAuth()
     const pathname = usePathname()
 
@@ -28,7 +30,7 @@ export default function Index() {
         if (!user) return
 
         getWorkouts().then((workouts) => {
-            setWorkoutList(workouts.items)
+            setWorkoutList(workouts)
             setLoading(false)
         })
     }, [pathname, user])

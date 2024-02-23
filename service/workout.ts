@@ -12,6 +12,7 @@ export type WorkoutInput = {
 export type WorkoutType = WorkoutInput & {
     user: string
     id: string
+    temp?: boolean
     created: string
     updated: string
 }
@@ -23,9 +24,14 @@ export function createWorkout(params: WorkoutInput, userId: string) {
 }
 
 export function getWorkouts(page: number = 1, limit: number = 50000) {
-    return pb.collection<WorkoutType>('workouts').getList(page, limit, {
-        sort: '-created'
-    })
+    return pb
+        .collection<WorkoutType>('workouts')
+        .getList(page, limit, {
+            sort: '-created'
+        })
+        .then((result) => {
+            return result.items
+        })
 }
 
 export function getWorkout(id: string) {
@@ -56,4 +62,10 @@ export function markWorkoutAsComplete(id: string) {
     return pb.collection<WorkoutType>('workouts').update(id, {
         completed: true
     })
+}
+
+export function pushToServer(workout: WorkoutType) {
+    const { temp, id, ...rest } = workout
+    console.log('Pushing to server', rest)
+    return pb.collection<WorkoutType>('workouts').create(rest)
 }

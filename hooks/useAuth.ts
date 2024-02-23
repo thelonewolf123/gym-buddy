@@ -3,7 +3,7 @@ import { useCallback } from 'react'
 
 import { pb } from '../service'
 
-type UserType = {
+export type UserType = {
     id: string
     username: string
     email: string

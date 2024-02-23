@@ -8,18 +8,14 @@ import {
     ScrollView,
     TextArea
 } from 'native-base'
-import React, { useState } from 'react'
-import { TextInput, View } from 'react-native'
+import React, { useCallback, useState } from 'react'
 
-import { WorkoutRealmContext } from '../database/realm.db'
 import useAuth from '../hooks/useAuth'
-import { createWorkout, WorkoutInput } from '../service/workout'
-
-const { useRealm } = WorkoutRealmContext
+import useWorkout from '../hooks/useWorkout'
+import { WorkoutInput } from '../service/workout'
 
 export default function New() {
     const { user } = useAuth()
-    const realm = useRealm()
 
     const [workout, setWorkout] = useState<WorkoutInput>({
         name: '',
@@ -29,6 +25,7 @@ export default function New() {
         notes: ''
     })
     const [loading, setLoading] = useState(false)
+    const createWorkout = useWorkout((s) => s.createWorkout)
 
     const handleChange = (name: keyof WorkoutInput, value: string | number) => {
         setWorkout((prevWorkout) => ({
@@ -37,7 +34,7 @@ export default function New() {
         }))
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = useCallback(() => {
         // Do something with the workout data
         if (!user) {
             return
@@ -45,14 +42,15 @@ export default function New() {
         setLoading(true)
         createWorkout(workout, user.id)
             .then((result) => {
+                if (!result) return console.error('Failed to create workout')
                 setLoading(false)
                 router.replace(`/workout/${result.id}`)
             })
-            .catch((err) => {
-                console.error(err.originalError)
+            .catch((err: any) => {
+                console.error('Error in create workout: ', err.originalError)
                 setLoading(false)
             })
-    }
+    }, [createWorkout, user, workout])
 
     return (
         <>
@@ -94,7 +92,10 @@ export default function New() {
                                 placeholder="Total Sets"
                                 value={workout.totalSets.toString()}
                                 onChangeText={(value) =>
-                                    handleChange('totalSets', parseInt(value))
+                                    handleChange(
+                                        'totalSets',
+                                        parseInt(value) || 0
+                                    )
                                 }
                                 keyboardType="numeric"
                             />

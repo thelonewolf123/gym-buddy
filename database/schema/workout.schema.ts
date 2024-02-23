@@ -1,8 +1,9 @@
-import { UpdateMode } from 'realm/dist/bundle'
+import { UpdateMode } from 'realm'
 
 import { Realm } from '@realm/react'
 
-import { WorkoutType } from '../../service/workout'
+import { WorkoutInput, WorkoutType } from '../../service/workout'
+import { uniqueId } from '../../utils'
 
 export class Workout extends Realm.Object<WorkoutType> {
     static schema: Realm.ObjectSchema = {
@@ -17,26 +18,42 @@ export class Workout extends Realm.Object<WorkoutType> {
             completed: 'bool',
             user: 'string',
             created: 'string',
-            updated: 'string'
+            updated: 'string',
+            temp: 'bool?'
         },
         primaryKey: 'id'
     }
 
-    static createWorkout(params: WorkoutType, realm: Realm) {
+    static createWorkout(params: WorkoutInput, userId: string, realm: Realm) {
+        const id = uniqueId()
         realm.write(() => {
             realm.create<WorkoutType>('Workout', {
                 ...params,
+                created: new Date().toISOString(),
+                updated: new Date().toISOString(),
+                user: userId,
+                id,
+                temp: true,
                 completed: false
             })
         })
-    }
 
-    static getWorkouts(realm: Realm) {
-        return realm.objects<WorkoutType>('Workout').sorted('created', true)
-    }
-
-    static getWorkout(id: string, realm: Realm) {
         return realm.objectForPrimaryKey<WorkoutType>('Workout', id)
+    }
+
+    static getWorkouts(realm: Realm, userId: string): WorkoutType[] {
+        return realm
+            .objects<WorkoutType>('Workout')
+            .sorted('created', true)
+            .filtered(`user = "${userId}"`)
+            .map((workout) => workout)
+    }
+
+    static getWorkout(id: string, realm: Realm): WorkoutType | undefined {
+        const obj = realm.objectForPrimaryKey<WorkoutType>('Workout', id)
+        if (obj) {
+            return obj
+        }
     }
 
     static updateWorkout(
@@ -47,7 +64,7 @@ export class Workout extends Realm.Object<WorkoutType> {
         realm.write(() => {
             realm.create<WorkoutType>(
                 'Workout',
-                { ...params, id },
+                { ...params, id, updated: new Date().toISOString() },
                 UpdateMode.Modified
             )
         })
