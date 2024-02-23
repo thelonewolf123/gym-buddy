@@ -17,7 +17,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 import useAuth from '../hooks/useAuth'
 import useWorkout from '../hooks/useWorkout'
-import { getWorkouts, WorkoutType } from '../service/workout'
+import { WorkoutType } from '../service/workout'
 
 export default function Index() {
     const [workoutList, setWorkoutList] = useState<WorkoutType[]>([])

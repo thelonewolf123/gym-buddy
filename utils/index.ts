@@ -1,4 +1,4 @@
-export function uniqueId(len: number = 8) {
+export function uniqueId(len: number = 15) {
     const chars =
         'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
     let id = ''

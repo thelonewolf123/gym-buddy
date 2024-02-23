@@ -3,12 +3,8 @@ import { Button, Center, Heading, HStack, Text } from 'native-base'
 import React, { useState } from 'react'
 import { View } from 'react-native'
 
-import {
-    decrementWorkoutSet,
-    incrementWorkoutSet,
-    markWorkoutAsComplete,
-    WorkoutType
-} from '../service/workout'
+import useWorkout from '../hooks/useWorkout'
+import { WorkoutType } from '../service/workout'
 
 export const Counter: React.FC<{
     workout: WorkoutType
@@ -20,32 +16,33 @@ export const Counter: React.FC<{
     const [loadingComplete, setLoadingComplete] = useState(false)
     const [completed, setCompleted] = useState(workout.completed)
 
+    const incrementWorkoutSet = useWorkout((s) => s.incrementWorkoutSet)
+    const decrementWorkoutSet = useWorkout((s) => s.decrementWorkoutSet)
+    const markWorkoutAsComplete = useWorkout((s) => s.markWorkoutAsComplete)
+
     const incrementSets = () => {
         if (loadingAdd || loadingSub) return
         setLoadingAdd(true)
-        incrementWorkoutSet(workout.id).then(() => {
-            setSets((s) => s + 1)
-            setLoadingAdd(false)
-        })
+        incrementWorkoutSet(workout.id)
+        setSets((s) => s + 1)
+        setLoadingAdd(false)
     }
 
     const decrementSets = () => {
         if (sets <= 0 || loadingSub) return
         setLoadingSub(true)
-        decrementWorkoutSet(workout.id).then(() => {
-            setSets((s) => s - 1)
-            setLoadingSub(false)
-        })
+        decrementWorkoutSet(workout.id)
+        setSets((s) => s - 1)
+        setLoadingSub(false)
     }
 
     const markComplete = () => {
         if (loadingComplete) return
         setLoadingComplete(true)
-        markWorkoutAsComplete(workout.id).then(() => {
-            setCompleted(true)
-            setLoadingComplete(false)
-            refresh()
-        })
+        markWorkoutAsComplete(workout.id)
+        setCompleted(true)
+        setLoadingComplete(false)
+        refresh()
     }
 
     return (

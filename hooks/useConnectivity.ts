@@ -8,13 +8,11 @@ import NetInfo, { NetInfoState } from '@react-native-community/netinfo'
  */
 export const useConnectivity = () => {
     const [isConnected, setIsConnected] = useState(false)
-    useEffect(() => {
-        const connectionChangeHandler = (state: NetInfoState) => {
-            setIsConnected(!!state.isConnected)
-        }
+    const state = NetInfo.useNetInfo()
 
-        NetInfo.addEventListener(connectionChangeHandler)
-    }, [])
+    useEffect(() => {
+        setIsConnected(!!state.isConnected)
+    }, [state])
 
     return isConnected
 }

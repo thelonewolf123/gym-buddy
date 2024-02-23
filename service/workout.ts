@@ -13,6 +13,7 @@ export type WorkoutType = WorkoutInput & {
     user: string
     id: string
     temp?: boolean
+    deleted?: boolean
     created: string
     updated: string
 }
@@ -65,7 +66,7 @@ export function markWorkoutAsComplete(id: string) {
 }
 
 export function pushToServer(workout: WorkoutType) {
-    const { temp, id, ...rest } = workout
+    const { temp, ...rest } = workout
     console.log('Pushing to server', rest)
     return pb.collection<WorkoutType>('workouts').create(rest)
 }

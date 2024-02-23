@@ -19,22 +19,27 @@ export class Workout extends Realm.Object<WorkoutType> {
             user: 'string',
             created: 'string',
             updated: 'string',
-            temp: 'bool?'
+            temp: 'bool?',
+            deleted: 'bool?'
         },
         primaryKey: 'id'
     }
 
-    static createWorkout(params: WorkoutInput, userId: string, realm: Realm) {
+    static createWorkout(
+        params: WorkoutInput | WorkoutType,
+        userId: string,
+        realm: Realm
+    ) {
         const id = uniqueId()
         realm.write(() => {
             realm.create<WorkoutType>('Workout', {
-                ...params,
                 created: new Date().toISOString(),
                 updated: new Date().toISOString(),
                 user: userId,
                 id,
                 temp: true,
-                completed: false
+                completed: false,
+                ...params
             })
         })
 
@@ -46,6 +51,7 @@ export class Workout extends Realm.Object<WorkoutType> {
             .objects<WorkoutType>('Workout')
             .sorted('created', true)
             .filtered(`user = "${userId}"`)
+            .filtered('deleted != true')
             .map((workout) => workout)
     }
 
@@ -71,20 +77,17 @@ export class Workout extends Realm.Object<WorkoutType> {
     }
 
     static deleteWorkout(id: string, realm: Realm) {
-        realm.write(() => {
-            const workout = realm.objectForPrimaryKey<WorkoutType>(
-                'Workout',
-                id
-            )
-            realm.delete(workout)
-        })
+        this.updateWorkout(id, { deleted: true }, realm)
     }
 
     static incrementWorkoutSet(id: string, realm: Realm) {
         realm.write(() => {
+            const workout = this.getWorkout(id, realm)
+            console.log('workout', workout)
+            if (!workout) return
             realm.create<WorkoutType>(
                 'Workout',
-                { id, set: this.getWorkout(id, realm)?.set || 0 + 1 },
+                { id, set: workout.set + 1, updated: new Date().toISOString() },
                 UpdateMode.Modified
             )
         })
@@ -92,9 +95,12 @@ export class Workout extends Realm.Object<WorkoutType> {
 
     static decrementWorkoutSet(id: string, realm: Realm) {
         realm.write(() => {
+            const workout = this.getWorkout(id, realm)
+            console.log('workout', workout)
+            if (!workout) return
             realm.create<WorkoutType>(
                 'Workout',
-                { id, set: this.getWorkout(id, realm)?.set || 0 - 1 },
+                { id, set: workout.set - 1, updated: new Date().toISOString() },
                 UpdateMode.Modified
             )
         })

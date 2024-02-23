@@ -4,7 +4,7 @@ import { Workout } from './schema/workout.schema'
 
 export const WorkoutRealmContext = createRealmContext({
     schema: [Workout],
-    schemaVersion: 1,
+    schemaVersion: 2,
     migrationOptions: {
         resolveEmbeddedConstraints: true
     },
@@ -15,6 +15,13 @@ export const WorkoutRealmContext = createRealmContext({
 
             for (let i = 0; i < oldObjects.length; i++) {
                 newObjects[i].temp = false
+            }
+        } else if (oldRealm.schemaVersion < 2) {
+            const oldObjects = oldRealm.objects('Workout')
+            const newObjects = newRealm.objects('Workout')
+
+            for (let i = 0; i < oldObjects.length; i++) {
+                newObjects[i].deleted = false
             }
         }
     }

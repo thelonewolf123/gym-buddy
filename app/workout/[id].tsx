@@ -7,11 +7,13 @@ import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { Analytics } from '../../components/analytics'
 import { Counter } from '../../components/counter'
 import useWorkout from '../../hooks/useWorkout'
-import { deleteWorkout, WorkoutType } from '../../service/workout'
+import { WorkoutType } from '../../service/workout'
 
 export default function WorkoutId() {
     const [workout, setWorkout] = useState<WorkoutType | null>(null)
     const getWorkout = useWorkout((s) => s.getWorkout)
+    const deleteWorkout = useWorkout((s) => s.deleteWorkout)
+
     const params = useLocalSearchParams()
     const id = useMemo(() => {
         if (typeof params.id === 'string') return params.id
@@ -43,11 +45,10 @@ export default function WorkoutId() {
                 icon={
                     <MaterialCommunityIcons name="trash-can" color={'white'} />
                 }
-                onPress={() =>
-                    deleteWorkout(id).then(() => {
-                        router.replace('/')
-                    })
-                }
+                onPress={() => {
+                    deleteWorkout(id)
+                    router.replace('/')
+                }}
             />
             <View>
                 {workout ? (
