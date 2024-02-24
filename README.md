@@ -10,6 +10,8 @@ Gym Buddy is a mobile application developed using React Native, designed to help
 - **Cloud Storage:** All user data is stored securely on PocketBase, providing easy access and synchronization across devices.
 - **Customizable Workouts:** Users can create personalized workout routines tailored to their fitness goals and preferences.
 - **Intuitive Interface:** Gym Buddy features a user-friendly interface designed for ease of use during workouts.
+- **Offline sync:** Gym Buddy can work even without internet and when you connect to internet, it'll sync all your workout data.
+
 
 ## Installation
 
@@ -26,6 +28,7 @@ To run Gym Buddy on your local machine, follow these steps:
 
 - React Native
 - PocketBase
+- Realm db
 
 ## Usage
 
