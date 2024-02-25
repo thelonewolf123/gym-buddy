@@ -13,7 +13,7 @@ export type WorkoutType = WorkoutInput & {
     user: string
     id: string
     temp?: boolean
-    deleted?: boolean
+    deleted?: boolean // soft delete
     created: string
     updated: string
 }
