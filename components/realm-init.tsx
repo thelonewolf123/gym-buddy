@@ -3,14 +3,18 @@ import { useEffect, useMemo } from 'react'
 import { WorkoutRealmContext } from '../database/realm.db'
 import useAuth from '../hooks/useAuth'
 import { useConnectivity } from '../hooks/useConnectivity'
-import useWorkout from '../hooks/useWorkout'
+import useWorkout, { useWorkoutStore } from '../hooks/useWorkout'
 
 export default function RealmInit() {
     const { useRealm } = useMemo(() => WorkoutRealmContext, [])
     const { user } = useAuth()
 
     const realm = useRealm()
-    const { setRealm, setIsConnected, setUser } = useWorkout()
+    const [setRealm, setIsConnected, setUser] = useWorkoutStore((s) => [
+        s.setRealm,
+        s.setIsConnected,
+        s.setUser
+    ])
     const { syncToServer } = useWorkout()
     const isConnected = useConnectivity()
 

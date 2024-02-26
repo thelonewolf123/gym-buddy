@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { create } from 'zustand'
 
 import { Workout } from '../database/schema/workout.schema'
@@ -14,9 +14,6 @@ import { uniqueId } from '../utils'
 import { UserType } from './useAuth'
 
 type WorkoutContextType = {
-    realm: Realm | null
-    isConnected: boolean
-    user: UserType | null
     createWorkout: (
         params: WorkoutInput,
         userId: string
@@ -29,17 +26,30 @@ type WorkoutContextType = {
     decrementWorkoutSet: (id: string) => boolean
     markWorkoutAsComplete: (id: string) => boolean
     syncToServer: () => Promise<void>
+}
+
+type WorkoutContextStoreType = {
+    realm: Realm | null
+    isConnected: boolean
+    user: UserType | null
     setRealm: (realm: Realm) => void
     setIsConnected: (isConnected: boolean) => void
     setUser: (user: UserType) => void
 }
 
-const useWorkout: () => WorkoutContextType = () => {
-    const [realm, setRealm] = useState<Realm | null>(null)
-    const [isConnected, setIsConnected] = useState<boolean>(false)
-    const [user, setUser] = useState<UserType | null>(null)
+export const useWorkoutStore = create<WorkoutContextStoreType>((set) => ({
+    realm: null,
+    isConnected: false,
+    user: null,
+    setRealm: (realm) => set({ realm }),
+    setIsConnected: (isConnected) => set({ isConnected }),
+    setUser: (user) => set({ user })
+}))
 
-    const syncToServer = async () => {
+const useWorkout: () => WorkoutContextType = () => {
+    const { realm, isConnected, user } = useWorkoutStore()
+
+    const syncToServer = useCallback(async () => {
         const uid = uniqueId()
         console.log('Syncing to server...', uid)
         try {
@@ -114,15 +124,18 @@ const useWorkout: () => WorkoutContextType = () => {
         } catch (error: any) {
             console.log('Error in sync to server: ', error.originalError)
         }
-    }
+    }, [
+        isConnected,
+        realm,
+        user,
+        Workout.createWorkout,
+        Workout.deleteWorkout,
+        Workout.getWorkout,
+        Workout.getWorkouts,
+        Workout.updateWorkout
+    ])
 
     return {
-        realm: null,
-        isConnected: false,
-        user: null,
-        setRealm,
-        setIsConnected,
-        setUser,
         createWorkout: async (params, userId) => {
             if (!realm) {
                 console.log('Realm is not initialized!')
