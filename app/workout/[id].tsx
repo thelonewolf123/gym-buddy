@@ -11,8 +11,8 @@ import { WorkoutType } from '../../service/workout'
 
 export default function WorkoutId() {
     const [workout, setWorkout] = useState<WorkoutType | null>(null)
-    const getWorkout = useWorkout((s) => s.getWorkout)
-    const deleteWorkout = useWorkout((s) => s.deleteWorkout)
+    const { getWorkout } = useWorkout()
+    const { deleteWorkout } = useWorkout()
 
     const params = useLocalSearchParams()
     const id = useMemo(() => {

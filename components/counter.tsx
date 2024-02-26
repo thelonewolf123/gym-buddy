@@ -16,9 +16,9 @@ export const Counter: React.FC<{
     const [loadingComplete, setLoadingComplete] = useState(false)
     const [completed, setCompleted] = useState(workout.completed)
 
-    const incrementWorkoutSet = useWorkout((s) => s.incrementWorkoutSet)
-    const decrementWorkoutSet = useWorkout((s) => s.decrementWorkoutSet)
-    const markWorkoutAsComplete = useWorkout((s) => s.markWorkoutAsComplete)
+    const { incrementWorkoutSet } = useWorkout()
+    const { decrementWorkoutSet } = useWorkout()
+    const { markWorkoutAsComplete } = useWorkout()
 
     const incrementSets = () => {
         if (loadingAdd || loadingSub) return

@@ -10,16 +10,18 @@ export default function RealmInit() {
     const { user } = useAuth()
 
     const realm = useRealm()
-    const writeWorkout = useWorkout((s) => s.write)
-    const syncToServer = useWorkout((s) => s.syncToServer)
+    const { setRealm, setIsConnected, setUser } = useWorkout()
+    const { syncToServer } = useWorkout()
     const isConnected = useConnectivity()
 
     useEffect(() => {
-        writeWorkout({ realm: realm, user: user })
-    }, [realm, writeWorkout, user])
+        setRealm(realm)
+        if (!user) return
+        setUser(user)
+    }, [realm, user])
 
     useEffect(() => {
-        writeWorkout({ isConnected: isConnected })
+        setIsConnected(isConnected)
         console.log('Connected:', isConnected)
 
         if (!isConnected) return
@@ -32,7 +34,7 @@ export default function RealmInit() {
             .catch((err) => {
                 console.error('Failed to sync to server:', err)
             })
-    }, [isConnected, syncToServer, writeWorkout])
+    }, [isConnected, syncToServer, setIsConnected])
 
     return <></>
 }

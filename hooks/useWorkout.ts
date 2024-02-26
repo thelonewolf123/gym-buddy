@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { create } from 'zustand'
 
 import { Workout } from '../database/schema/workout.schema'
@@ -11,9 +12,6 @@ import {
 } from '../service/workout'
 import { uniqueId } from '../utils'
 import { UserType } from './useAuth'
-
-type WorkoutWriteFnType = (state: WorkoutContextType) => WorkoutContextType
-type WorkoutWriteObjType = WorkoutContextType | Partial<WorkoutContextType>
 
 type WorkoutContextType = {
     realm: Realm | null
@@ -31,117 +29,25 @@ type WorkoutContextType = {
     decrementWorkoutSet: (id: string) => boolean
     markWorkoutAsComplete: (id: string) => boolean
     syncToServer: () => Promise<void>
-    write: (obj: WorkoutWriteFnType | WorkoutWriteObjType) => void
+    setRealm: (realm: Realm) => void
+    setIsConnected: (isConnected: boolean) => void
+    setUser: (user: UserType) => void
 }
 
-const useWorkout = create<WorkoutContextType>((set, get) => ({
-    realm: null,
-    isConnected: false,
-    user: null,
-    createWorkout: async (params, userId) => {
-        const realm = get().realm
-        if (!realm) {
-            console.log('Realm is not initialized!')
-            return null
-        }
-        const resultOffline = Workout.createWorkout(params, userId, realm)
-        await get().syncToServer() // sync to server
-        return resultOffline
-    },
-    getWorkouts: async (page, limit) => {
-        // read
-        const realm = get().realm
-        const user = get().user
-        if (!realm) {
-            console.log('Realm is not initialized!')
-            return new Promise(() => [])
-        }
+const useWorkout: () => WorkoutContextType = () => {
+    const [realm, setRealm] = useState<Realm | null>(null)
+    const [isConnected, setIsConnected] = useState<boolean>(false)
+    const [user, setUser] = useState<UserType | null>(null)
 
-        if (!user) {
-            console.log('User is not initialized!')
-            return new Promise(() => [])
-        }
-        await get().syncToServer()
-        return Workout.getWorkouts(realm, user.id)
-    },
-    getWorkout: async (id) => {
-        // read
-        const realm = get().realm
-        if (!realm) {
-            return null
-        }
-        await get().syncToServer()
-        const workout = Workout.getWorkout(id, realm)
-        if (workout) {
-            return workout
-        }
-
-        return null
-    },
-    updateWorkout: async (id, params) => {
-        const realm = get().realm
-        if (!realm) {
-            console.log('Realm is not initialized!')
-            return
-        }
-        Workout.updateWorkout(id, params, realm)
-        await get().syncToServer()
-    },
-    deleteWorkout: (id) => {
-        const realm = get().realm
-        if (!realm) {
-            console.log('Realm is not initialized!')
-            return false
-        }
-
-        Workout.deleteWorkout(id, realm)
-        void get().syncToServer()
-        return true
-    },
-    incrementWorkoutSet: (id) => {
-        const realm = get().realm
-        if (!realm) {
-            console.log('Realm is not initialized!')
-            return false
-        }
-
-        Workout.incrementWorkoutSet(id, realm)
-        void get().syncToServer()
-        return true
-    },
-    decrementWorkoutSet: (id) => {
-        const realm = get().realm
-        if (!realm) {
-            console.log('Realm is not initialized!')
-            return false
-        }
-
-        Workout.decrementWorkoutSet(id, realm)
-        void get().syncToServer()
-        return true
-    },
-    markWorkoutAsComplete: (id) => {
-        const realm = get().realm
-        if (!realm) {
-            console.log('Realm is not initialized!')
-            return false
-        }
-
-        Workout.updateWorkout(id, { completed: true }, realm)
-        void get().syncToServer()
-        return true
-    },
-    syncToServer: async () => {
+    const syncToServer = async () => {
         const uid = uniqueId()
         console.log('Syncing to server...', uid)
         try {
-            if (!get().isConnected) {
+            if (!isConnected) {
                 console.log('Not connected to the internet!')
                 return
             }
 
-            const realm = get().realm
-            const user = get().user
             if (!realm) {
                 console.log('Realm is not initialized!')
                 return
@@ -208,14 +114,103 @@ const useWorkout = create<WorkoutContextType>((set, get) => ({
         } catch (error: any) {
             console.log('Error in sync to server: ', error.originalError)
         }
-    },
-    write: (fn) => {
-        if (typeof fn === 'function') {
-            set(fn(get()))
-        } else {
-            set({ ...get(), ...fn })
-        }
     }
-}))
+
+    return {
+        realm: null,
+        isConnected: false,
+        user: null,
+        setRealm,
+        setIsConnected,
+        setUser,
+        createWorkout: async (params, userId) => {
+            if (!realm) {
+                console.log('Realm is not initialized!')
+                return null
+            }
+            const resultOffline = Workout.createWorkout(params, userId, realm)
+            await syncToServer() // sync to server
+            return resultOffline
+        },
+        getWorkouts: async (page, limit) => {
+            // read
+
+            if (!realm) {
+                console.log('Realm is not initialized!')
+                return new Promise(() => [])
+            }
+
+            if (!user) {
+                console.log('User is not initialized!')
+                return new Promise(() => [])
+            }
+            await syncToServer()
+            return Workout.getWorkouts(realm, user.id)
+        },
+        getWorkout: async (id) => {
+            // read
+
+            if (!realm) {
+                return null
+            }
+            await syncToServer()
+            const workout = Workout.getWorkout(id, realm)
+            if (workout) {
+                return workout
+            }
+
+            return null
+        },
+        updateWorkout: async (id, params) => {
+            if (!realm) {
+                console.log('Realm is not initialized!')
+                return
+            }
+            Workout.updateWorkout(id, params, realm)
+            await syncToServer()
+        },
+        deleteWorkout: (id) => {
+            if (!realm) {
+                console.log('Realm is not initialized!')
+                return false
+            }
+
+            Workout.deleteWorkout(id, realm)
+            void syncToServer()
+            return true
+        },
+        incrementWorkoutSet: (id) => {
+            if (!realm) {
+                console.log('Realm is not initialized!')
+                return false
+            }
+
+            Workout.incrementWorkoutSet(id, realm)
+            void syncToServer()
+            return true
+        },
+        decrementWorkoutSet: (id) => {
+            if (!realm) {
+                console.log('Realm is not initialized!')
+                return false
+            }
+
+            Workout.decrementWorkoutSet(id, realm)
+            void syncToServer()
+            return true
+        },
+        markWorkoutAsComplete: (id) => {
+            if (!realm) {
+                console.log('Realm is not initialized!')
+                return false
+            }
+
+            Workout.updateWorkout(id, { completed: true }, realm)
+            void syncToServer()
+            return true
+        },
+        syncToServer
+    }
+}
 
 export default useWorkout

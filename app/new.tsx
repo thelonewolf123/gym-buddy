@@ -25,7 +25,7 @@ export default function New() {
         notes: ''
     })
     const [loading, setLoading] = useState(false)
-    const createWorkout = useWorkout((s) => s.createWorkout)
+    const { createWorkout } = useWorkout()
 
     const handleChange = (name: keyof WorkoutInput, value: string | number) => {
         setWorkout((prevWorkout) => ({
