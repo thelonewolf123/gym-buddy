@@ -19,7 +19,7 @@ export class Workout extends Realm.Object<WorkoutType> {
             user: 'string',
             created: 'string',
             updated: 'string',
-            temp: 'bool?',
+            sync: 'bool?',
             deleted: 'bool?'
         },
         primaryKey: 'id'
@@ -37,7 +37,7 @@ export class Workout extends Realm.Object<WorkoutType> {
                 updated: new Date().toISOString(),
                 user: userId,
                 id,
-                temp: true,
+                sync: false,
                 completed: false,
                 ...params
             })

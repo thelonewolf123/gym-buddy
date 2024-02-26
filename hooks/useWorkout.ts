@@ -158,9 +158,9 @@ const useWorkout = create<WorkoutContextType>((set, get) => ({
             console.log('workouts', workouts)
 
             for (const workout of workouts) {
-                if (workout.temp) {
+                if (!workout.sync) {
                     await pushToServer(workout)
-                    Workout.updateWorkout(workout.id, { temp: false }, realm)
+                    Workout.updateWorkout(workout.id, { sync: true }, realm)
                 }
             }
 
@@ -168,12 +168,17 @@ const useWorkout = create<WorkoutContextType>((set, get) => ({
                 workoutsOnline.map(async (workout) => {
                     const localWorkout = Workout.getWorkout(workout.id, realm)
                     if (!localWorkout) {
-                        workout.temp = false
+                        workout.sync = true
                         return Workout.createWorkout(
                             workout,
                             workout.user,
                             realm
                         )
+                    }
+
+                    if (workout.deleted) {
+                        Workout.deleteWorkout(workout.id, realm)
+                        return
                     }
 
                     const localUpdated = new Date(

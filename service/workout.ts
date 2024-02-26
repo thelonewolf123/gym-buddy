@@ -12,7 +12,7 @@ export type WorkoutInput = {
 export type WorkoutType = WorkoutInput & {
     user: string
     id: string
-    temp?: boolean
+    sync?: boolean
     deleted?: boolean // soft delete
     created: string
     updated: string
@@ -44,11 +44,13 @@ export function updateWorkout(id: string, params: Partial<WorkoutInput>) {
 }
 
 export function deleteWorkout(id: string) {
-    return pb.collection<WorkoutType>('workouts').delete(id)
+    return pb.collection<WorkoutType>('workouts').update(id, {
+        deleted: true
+    })
 }
 
 export function pushToServer(workout: WorkoutType) {
-    const { temp, ...rest } = workout
+    const { sync, ...rest } = workout
     console.log('Pushing to server', rest)
     return pb.collection<WorkoutType>('workouts').create(rest)
 }
