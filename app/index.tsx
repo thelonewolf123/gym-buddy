@@ -20,20 +20,8 @@ import useWorkout from '../hooks/useWorkout'
 import { WorkoutType } from '../service/workout'
 
 export default function Index() {
-    const [workoutList, setWorkoutList] = useState<WorkoutType[]>([])
-    const [loading, setLoading] = useState(true)
-    const { getWorkouts } = useWorkout()
+    const { workoutList } = useWorkout()
     const { user } = useAuth()
-    const pathname = usePathname()
-
-    useEffect(() => {
-        if (!user) return
-
-        getWorkouts().then((workouts) => {
-            setWorkoutList(workouts)
-            setLoading(false)
-        })
-    }, [pathname, user])
 
     if (!user) {
         return <Redirect href={'/login'} />
@@ -63,64 +51,54 @@ export default function Index() {
                 onPress={() => router.replace('/new')}
             />
             <ScrollView w="100%">
-                {loading ? (
-                    <Center h={'100%'} w="100%">
-                        <Spinner size={'lg'} />
-                    </Center>
-                ) : (
-                    <List>
-                        {workoutList.map((workout) => (
-                            <List.Item
-                                key={workout.id}
-                                w="100%"
-                                onPress={() => {
-                                    router.push(`/workout/${workout.id}`)
-                                }}
-                            >
-                                <HStack pr="4">
-                                    <MaterialCommunityIcons
-                                        name="dumbbell"
-                                        size={34}
-                                        color={'#111'}
-                                    />
-                                </HStack>
-                                <HStack
-                                    w="80%"
-                                    className="flex justify-between"
-                                >
-                                    <VStack className="flex flex-col gap-1">
-                                        <Heading>
-                                            {formatName(workout.name)}
-                                        </Heading>
+                <List>
+                    {workoutList.map((workout) => (
+                        <List.Item
+                            key={workout.id}
+                            w="100%"
+                            onPress={() => {
+                                router.push(`/workout/${workout.id}`)
+                            }}
+                        >
+                            <HStack pr="4">
+                                <MaterialCommunityIcons
+                                    name="dumbbell"
+                                    size={34}
+                                    color={'#111'}
+                                />
+                            </HStack>
+                            <HStack w="80%" className="flex justify-between">
+                                <VStack className="flex flex-col gap-1">
+                                    <Heading>
+                                        {formatName(workout.name)}
+                                    </Heading>
+                                    <Text
+                                        color={'coolGray.400'}
+                                        _dark={{
+                                            color: 'warmGray.400'
+                                        }}
+                                    >
+                                        {workout.reps} reps, {workout.set} sets
+                                    </Text>
+                                </VStack>
+                                <Center>
+                                    {workout.created ? (
                                         <Text
                                             color={'coolGray.400'}
                                             _dark={{
                                                 color: 'warmGray.400'
                                             }}
                                         >
-                                            {workout.reps} reps, {workout.set}{' '}
-                                            sets
+                                            {new Date(
+                                                workout.created
+                                            ).toLocaleDateString()}
                                         </Text>
-                                    </VStack>
-                                    <Center>
-                                        {workout.created ? (
-                                            <Text
-                                                color={'coolGray.400'}
-                                                _dark={{
-                                                    color: 'warmGray.400'
-                                                }}
-                                            >
-                                                {new Date(
-                                                    workout.created
-                                                ).toLocaleDateString()}
-                                            </Text>
-                                        ) : null}
-                                    </Center>
-                                </HStack>
-                            </List.Item>
-                        ))}
-                    </List>
-                )}
+                                    ) : null}
+                                </Center>
+                            </HStack>
+                        </List.Item>
+                    ))}
+                </List>
             </ScrollView>
         </>
     )

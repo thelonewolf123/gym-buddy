@@ -1,3 +1,5 @@
+import EventSourceModule from 'react-native-sse'
+
 import { pb } from './index'
 
 export type WorkoutInput = {
@@ -53,4 +55,22 @@ export function pushToServer(workout: WorkoutType) {
     const { sync, ...rest } = workout
     console.log('Pushing to server', rest)
     return pb.collection<WorkoutType>('workouts').create(rest)
+}
+
+export function subscribeToWorkouts(
+    userId: string,
+    callback: (workouts: WorkoutType[]) => void
+) {
+    console.log('subscribeToWorkouts', userId)
+
+    pb.collection<WorkoutType>('workouts').subscribe('*', (event) => {
+        console.log('Event:', event)
+        if (event.record.user === userId) {
+            callback([event.record])
+        }
+    })
+
+    return () => {
+        pb.collection<WorkoutType>('workouts').unsubscribe()
+    }
 }

@@ -1,6 +1,8 @@
-import { useCallback, useState } from 'react'
+import { debounce, isEqual } from 'lodash'
+import { useCallback, useEffect, useMemo } from 'react'
 import { create } from 'zustand'
 
+import { WorkoutRealmContext } from '../database/realm.db'
 import { Workout } from '../database/schema/workout.schema'
 import {
     deleteWorkout,
@@ -14,18 +16,16 @@ import { uniqueId } from '../utils'
 import { UserType } from './useAuth'
 
 type WorkoutContextType = {
-    createWorkout: (
-        params: WorkoutInput,
-        userId: string
-    ) => Promise<WorkoutType | null>
-    getWorkouts: (page?: number, limit?: number) => Promise<WorkoutType[]>
-    getWorkout: (id: string) => Promise<WorkoutType | null>
+    createWorkout: (params: WorkoutInput, userId: string) => WorkoutType | null
+    getWorkouts: (page?: number, limit?: number) => WorkoutType[]
+    getWorkout: (id: string) => WorkoutType | null
     updateWorkout: (id: string, params: Partial<WorkoutInput>) => void
     deleteWorkout: (id: string) => boolean
     incrementWorkoutSet: (id: string) => boolean
     decrementWorkoutSet: (id: string) => boolean
     markWorkoutAsComplete: (id: string) => boolean
-    syncToServer: () => Promise<void>
+    syncToServer: () => Promise<void> | void
+    workoutList: WorkoutType[]
 }
 
 type WorkoutContextStoreType = {
@@ -49,7 +49,7 @@ export const useWorkoutStore = create<WorkoutContextStoreType>((set) => ({
 const useWorkout: () => WorkoutContextType = () => {
     const { realm, isConnected, user } = useWorkoutStore()
 
-    const syncToServer = useCallback(async () => {
+    const syncToServerFn = useCallback(async () => {
         const uid = uniqueId()
         console.log('Syncing to server...', uid)
         try {
@@ -70,13 +70,24 @@ const useWorkout: () => WorkoutContextType = () => {
 
             const workouts = Workout.getWorkouts(realm, user.id)
             const workoutsOnline = await getWorkouts()
-            console.log('workoutsOnline', workoutsOnline)
-            console.log('workouts', workouts)
 
             for (const workout of workouts) {
                 if (!workout.sync) {
                     await pushToServer(workout)
                     Workout.updateWorkout(workout.id, { sync: true }, realm)
+                }
+            }
+
+            function getWorkoutForComp(workout: WorkoutType) {
+                return {
+                    id: workout.id,
+                    name: workout.name,
+                    reps: workout.reps,
+                    set: workout.set,
+                    totalSets: workout.totalSets,
+                    notes: workout.notes,
+                    completed: workout.completed,
+                    deleted: workout.deleted
                 }
             }
 
@@ -90,6 +101,12 @@ const useWorkout: () => WorkoutContextType = () => {
                             workout.user,
                             realm
                         )
+                    }
+                    const localWorkoutRest = getWorkoutForComp(localWorkout)
+                    const onlineWorkout = getWorkoutForComp(workout)
+
+                    if (isEqual(localWorkoutRest, onlineWorkout)) {
+                        return
                     }
 
                     if (workout.deleted) {
@@ -135,38 +152,59 @@ const useWorkout: () => WorkoutContextType = () => {
         Workout.updateWorkout
     ])
 
+    const syncToServer = useMemo(
+        () => debounce(syncToServerFn, 2_000),
+        [syncToServerFn]
+    )
+
+    const { useQuery } = useMemo(() => WorkoutRealmContext, [])
+    const workoutList = useQuery(
+        Workout,
+        (realm) => {
+            if (!user) return realm.filtered('id = ""') // return empty realm
+            return realm
+                .sorted('created', true)
+                .filtered(`user = "${user.id}"`)
+                .filtered('deleted != true')
+        },
+        [user]
+    )
+
     return {
-        createWorkout: async (params, userId) => {
+        // Context
+        syncToServer,
+        workoutList: workoutList.map((workout) => workout),
+
+        // CRUD
+        createWorkout: (params, userId) => {
             if (!realm) {
                 console.log('Realm is not initialized!')
                 return null
             }
             const resultOffline = Workout.createWorkout(params, userId, realm)
-            await syncToServer() // sync to server
             return resultOffline
         },
-        getWorkouts: async (page, limit) => {
+        getWorkouts: (page, limit) => {
             // read
 
             if (!realm) {
                 console.log('Realm is not initialized!')
-                return new Promise(() => [])
+                return []
             }
 
             if (!user) {
                 console.log('User is not initialized!')
-                return new Promise(() => [])
+                return []
             }
-            await syncToServer()
             return Workout.getWorkouts(realm, user.id)
         },
-        getWorkout: async (id) => {
+        getWorkout: (id) => {
             // read
 
             if (!realm) {
                 return null
             }
-            await syncToServer()
+
             const workout = Workout.getWorkout(id, realm)
             if (workout) {
                 return workout
@@ -180,7 +218,6 @@ const useWorkout: () => WorkoutContextType = () => {
                 return
             }
             Workout.updateWorkout(id, params, realm)
-            await syncToServer()
         },
         deleteWorkout: (id) => {
             if (!realm) {
@@ -189,7 +226,6 @@ const useWorkout: () => WorkoutContextType = () => {
             }
 
             Workout.deleteWorkout(id, realm)
-            void syncToServer()
             return true
         },
         incrementWorkoutSet: (id) => {
@@ -199,7 +235,6 @@ const useWorkout: () => WorkoutContextType = () => {
             }
 
             Workout.incrementWorkoutSet(id, realm)
-            void syncToServer()
             return true
         },
         decrementWorkoutSet: (id) => {
@@ -209,7 +244,6 @@ const useWorkout: () => WorkoutContextType = () => {
             }
 
             Workout.decrementWorkoutSet(id, realm)
-            void syncToServer()
             return true
         },
         markWorkoutAsComplete: (id) => {
@@ -219,10 +253,8 @@ const useWorkout: () => WorkoutContextType = () => {
             }
 
             Workout.updateWorkout(id, { completed: true }, realm)
-            void syncToServer()
             return true
-        },
-        syncToServer
+        }
     }
 }
 

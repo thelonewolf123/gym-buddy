@@ -40,16 +40,9 @@ export default function New() {
             return
         }
         setLoading(true)
-        createWorkout(workout, user.id)
-            .then((result) => {
-                if (!result) return console.error('Failed to create workout')
-                setLoading(false)
-                router.replace(`/workout/${result.id}`)
-            })
-            .catch((err: any) => {
-                console.error('Error in create workout: ', err.originalError)
-                setLoading(false)
-            })
+        const result = createWorkout(workout, user.id)
+        if (!result) return console.error('Failed to create workout')
+        router.replace(`/workout/${result.id}`)
     }, [createWorkout, user, workout])
 
     return (

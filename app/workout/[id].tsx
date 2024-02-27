@@ -21,9 +21,8 @@ export default function WorkoutId() {
     }, [params.id])
 
     const refresh = useCallback(() => {
-        getWorkout(id).then((workout) => {
-            setWorkout(workout)
-        })
+        const workout = getWorkout(id)
+        setWorkout(workout)
     }, [id])
 
     useEffect(() => {

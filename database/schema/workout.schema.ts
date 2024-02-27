@@ -6,6 +6,19 @@ import { WorkoutInput, WorkoutType } from '../../service/workout'
 import { uniqueId } from '../../utils'
 
 export class Workout extends Realm.Object<WorkoutType> {
+    id!: string
+    name!: string
+    reps!: number
+    set!: number
+    totalSets!: number
+    notes!: string
+    completed!: boolean
+    user!: string
+    created!: string
+    updated!: string
+    sync?: boolean
+    deleted?: boolean
+
     static schema: Realm.ObjectSchema = {
         name: 'Workout',
         properties: {
@@ -83,7 +96,6 @@ export class Workout extends Realm.Object<WorkoutType> {
     static incrementWorkoutSet(id: string, realm: Realm) {
         realm.write(() => {
             const workout = this.getWorkout(id, realm)
-            console.log('workout', workout)
             if (!workout) return
             realm.create<WorkoutType>(
                 'Workout',
@@ -96,7 +108,6 @@ export class Workout extends Realm.Object<WorkoutType> {
     static decrementWorkoutSet(id: string, realm: Realm) {
         realm.write(() => {
             const workout = this.getWorkout(id, realm)
-            console.log('workout', workout)
             if (!workout) return
             realm.create<WorkoutType>(
                 'Workout',
