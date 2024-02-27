@@ -1,16 +1,15 @@
 import { router, Stack, useLocalSearchParams, useRouter } from 'expo-router'
 import { Fab, Spinner, View } from 'native-base'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 import { Analytics } from '../../components/analytics'
 import { Counter } from '../../components/counter'
+import { useGetWorkoutById } from '../../hooks/useGetWorkoutById'
 import useWorkout from '../../hooks/useWorkout'
-import { WorkoutType } from '../../service/workout'
 
 export default function WorkoutId() {
-    const [workout, setWorkout] = useState<WorkoutType | null>(null)
     const { getWorkout } = useWorkout()
     const { deleteWorkout } = useWorkout()
 
@@ -20,14 +19,7 @@ export default function WorkoutId() {
         throw new Error('Invalid workout id')
     }, [params.id])
 
-    const refresh = useCallback(() => {
-        const workout = getWorkout(id)
-        setWorkout(workout)
-    }, [id])
-
-    useEffect(() => {
-        refresh()
-    }, [refresh])
+    const workout = useGetWorkoutById(id)
 
     return (
         <>
@@ -52,7 +44,7 @@ export default function WorkoutId() {
             <View>
                 {workout ? (
                     <>
-                        <Counter workout={workout} refresh={refresh} />
+                        <Counter workout={workout} />
                         <Analytics workout={workout} />
                     </>
                 ) : (

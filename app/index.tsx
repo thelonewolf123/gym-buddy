@@ -16,11 +16,10 @@ import { useEffect, useState } from 'react'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 import useAuth from '../hooks/useAuth'
-import useWorkout from '../hooks/useWorkout'
-import { WorkoutType } from '../service/workout'
+import { useWorkoutList } from '../hooks/useWorkoutList'
 
 export default function Index() {
-    const { workoutList } = useWorkout()
+    const workoutList = useWorkoutList()
     const { user } = useAuth()
 
     if (!user) {

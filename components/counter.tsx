@@ -8,8 +8,7 @@ import { WorkoutType } from '../service/workout'
 
 export const Counter: React.FC<{
     workout: WorkoutType
-    refresh: () => void
-}> = ({ workout, refresh }) => {
+}> = ({ workout }) => {
     const [sets, setSets] = useState(workout.set)
     const [loadingAdd, setLoadingAdd] = useState(false)
     const [loadingSub, setLoadingSub] = useState(false)
@@ -42,7 +41,6 @@ export const Counter: React.FC<{
         markWorkoutAsComplete(workout.id)
         setCompleted(true)
         setLoadingComplete(false)
-        refresh()
     }
 
     return (

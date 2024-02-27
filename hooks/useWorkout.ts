@@ -1,8 +1,7 @@
 import { debounce, isEqual } from 'lodash'
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { create } from 'zustand'
 
-import { WorkoutRealmContext } from '../database/realm.db'
 import { Workout } from '../database/schema/workout.schema'
 import {
     deleteWorkout,
@@ -14,6 +13,7 @@ import {
 } from '../service/workout'
 import { uniqueId } from '../utils'
 import { UserType } from './useAuth'
+import { useConnectivity } from './useConnectivity'
 
 type WorkoutContextType = {
     createWorkout: (params: WorkoutInput, userId: string) => WorkoutType | null
@@ -25,29 +25,25 @@ type WorkoutContextType = {
     decrementWorkoutSet: (id: string) => boolean
     markWorkoutAsComplete: (id: string) => boolean
     syncToServer: () => Promise<void> | void
-    workoutList: WorkoutType[]
 }
 
 type WorkoutContextStoreType = {
     realm: Realm | null
-    isConnected: boolean
     user: UserType | null
     setRealm: (realm: Realm) => void
-    setIsConnected: (isConnected: boolean) => void
     setUser: (user: UserType) => void
 }
 
 export const useWorkoutStore = create<WorkoutContextStoreType>((set) => ({
     realm: null,
-    isConnected: false,
     user: null,
     setRealm: (realm) => set({ realm }),
-    setIsConnected: (isConnected) => set({ isConnected }),
     setUser: (user) => set({ user })
 }))
 
 const useWorkout: () => WorkoutContextType = () => {
-    const { realm, isConnected, user } = useWorkoutStore()
+    const { realm, user } = useWorkoutStore()
+    const isConnected = useConnectivity()
 
     const syncToServerFn = useCallback(async () => {
         const uid = uniqueId()
@@ -157,23 +153,9 @@ const useWorkout: () => WorkoutContextType = () => {
         [syncToServerFn]
     )
 
-    const { useQuery } = useMemo(() => WorkoutRealmContext, [])
-    const workoutList = useQuery(
-        Workout,
-        (realm) => {
-            if (!user) return realm.filtered('id = ""') // return empty realm
-            return realm
-                .sorted('created', true)
-                .filtered(`user = "${user.id}"`)
-                .filtered('deleted != true')
-        },
-        [user]
-    )
-
     return {
         // Context
         syncToServer,
-        workoutList: workoutList.map((workout) => workout),
 
         // CRUD
         createWorkout: (params, userId) => {
