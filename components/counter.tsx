@@ -9,38 +9,23 @@ import { WorkoutType } from '../service/workout'
 export const Counter: React.FC<{
     workout: WorkoutType
 }> = ({ workout }) => {
-    const [sets, setSets] = useState(workout.set)
-    const [loadingAdd, setLoadingAdd] = useState(false)
-    const [loadingSub, setLoadingSub] = useState(false)
-    const [loadingComplete, setLoadingComplete] = useState(false)
-    const [completed, setCompleted] = useState(workout.completed)
+    const sets = workout.set
+    const completed = workout.completed
 
-    const { incrementWorkoutSet } = useWorkout()
-    const { decrementWorkoutSet } = useWorkout()
-    const { markWorkoutAsComplete } = useWorkout()
+    const { incrementWorkoutSet, decrementWorkoutSet, markWorkoutAsComplete } =
+        useWorkout()
 
     const incrementSets = () => {
-        if (loadingAdd || loadingSub) return
-        setLoadingAdd(true)
         incrementWorkoutSet(workout.id)
-        setSets((s) => s + 1)
-        setLoadingAdd(false)
     }
 
     const decrementSets = () => {
-        if (sets <= 0 || loadingSub) return
-        setLoadingSub(true)
+        if (sets <= 0) return
         decrementWorkoutSet(workout.id)
-        setSets((s) => s - 1)
-        setLoadingSub(false)
     }
 
     const markComplete = () => {
-        if (loadingComplete) return
-        setLoadingComplete(true)
         markWorkoutAsComplete(workout.id)
-        setCompleted(true)
-        setLoadingComplete(false)
     }
 
     return (
@@ -53,7 +38,6 @@ export const Counter: React.FC<{
                         colorScheme={'blue'}
                         onPress={incrementSets}
                         isDisabled={sets >= workout.totalSets || completed}
-                        isLoading={loadingAdd}
                     >
                         <HStack>
                             <Text className="text-white">Increment (+)</Text>
@@ -63,7 +47,6 @@ export const Counter: React.FC<{
                         colorScheme={'red'}
                         onPress={decrementSets}
                         isDisabled={sets <= 0 || completed}
-                        isLoading={loadingSub}
                     >
                         <HStack>
                             <Text className="text-white">Decrement (-)</Text>
@@ -71,11 +54,7 @@ export const Counter: React.FC<{
                     </Button>
 
                     {sets >= workout.totalSets && !completed && (
-                        <Button
-                            colorScheme={'green'}
-                            onPress={markComplete}
-                            isLoading={loadingComplete}
-                        >
+                        <Button colorScheme={'green'} onPress={markComplete}>
                             <HStack>
                                 <Text className="text-white">Complete</Text>
                             </HStack>

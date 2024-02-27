@@ -10,7 +10,6 @@ import { useGetWorkoutById } from '../../hooks/useGetWorkoutById'
 import useWorkout from '../../hooks/useWorkout'
 
 export default function WorkoutId() {
-    const { getWorkout } = useWorkout()
     const { deleteWorkout } = useWorkout()
 
     const params = useLocalSearchParams()

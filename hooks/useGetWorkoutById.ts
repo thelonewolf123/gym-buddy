@@ -18,7 +18,7 @@ export function useGetWorkoutById(id: string) {
                 .filtered(`id = "${id}"`)
                 .filtered('deleted != true')
         },
-        [user]
+        [user, id]
     )
 
     return workoutList.map((workout) => workout).at(0)

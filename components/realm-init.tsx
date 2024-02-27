@@ -11,30 +11,37 @@ export default function RealmInit() {
     const { useRealm } = useMemo(() => WorkoutRealmContext, [])
     const { user } = useAuth()
     const realm = useRealm()
-    const [setRealm, setUser] = useWorkoutStore((s) => [s.setRealm, s.setUser])
+    const [setRealm, setUser, setIsConnected] = useWorkoutStore((s) => [
+        s.setRealm,
+        s.setUser,
+        s.setIsConnected
+    ])
     const { syncToServer } = useWorkout()
     const workoutList = useWorkoutList()
     const isConnected = useConnectivity()
 
     useEffect(() => {
         setRealm(realm)
+        setIsConnected(isConnected)
         if (!user) return
         setUser(user)
     }, [realm, user, isConnected])
 
     useEffect(() => {
         if (!user) return
+        if (!isConnected) return
+
         const unsubscribe = subscribeToWorkouts(user.id, (workouts) => {
             syncToServer()
         })
 
         return () => unsubscribe()
-    }, [user, subscribeToWorkouts])
+    }, [user, subscribeToWorkouts, isConnected, syncToServer])
 
     useEffect(() => {
         if (!user) return
         syncToServer()
-    }, [workoutList])
+    }, [workoutList, syncToServer, user])
 
     return <></>
 }

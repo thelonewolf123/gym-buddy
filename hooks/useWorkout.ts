@@ -30,20 +30,23 @@ type WorkoutContextType = {
 type WorkoutContextStoreType = {
     realm: Realm | null
     user: UserType | null
+    isConnected: boolean
     setRealm: (realm: Realm) => void
     setUser: (user: UserType) => void
+    setIsConnected: (isConnected: boolean) => void
 }
 
 export const useWorkoutStore = create<WorkoutContextStoreType>((set) => ({
     realm: null,
     user: null,
+    isConnected: false,
     setRealm: (realm) => set({ realm }),
-    setUser: (user) => set({ user })
+    setUser: (user) => set({ user }),
+    setIsConnected: (isConnected) => set({ isConnected })
 }))
 
 const useWorkout: () => WorkoutContextType = () => {
-    const { realm, user } = useWorkoutStore()
-    const isConnected = useConnectivity()
+    const { realm, user, isConnected } = useWorkoutStore()
 
     const syncToServerFn = useCallback(async () => {
         const uid = uniqueId()
