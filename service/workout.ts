@@ -1,5 +1,3 @@
-import EventSourceModule from 'react-native-sse'
-
 import { pb } from './index'
 
 export type WorkoutInput = {
