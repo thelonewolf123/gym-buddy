@@ -13,13 +13,17 @@ import React, { useState } from 'react'
 
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 
+import { DatePicker } from '../components/date-picker'
 import { WorkoutAction } from '../components/workout-action'
 import WorkoutForm from '../components/workout-form'
 import useAuth from '../hooks/useAuth'
+import { useWorkoutStore } from '../hooks/useWorkout'
 import { useWorkoutList } from '../hooks/useWorkoutList'
 
 export default function Index() {
-    const workoutList = useWorkoutList()
+    const date = useWorkoutStore((s) => s.dateFilter)
+    const workoutList = useWorkoutList(date)
+
     const { user } = useAuth()
     const [activeWorkoutId, setActiveWorkoutId] = useState<string>()
 
@@ -38,16 +42,19 @@ export default function Index() {
 
     return (
         <>
+            <DatePicker />
             <Stack.Screen
                 options={{
-                    headerTitle: 'Home'
+                    headerTitle: 'GYM Buddy'
                 }}
             ></Stack.Screen>
             <WorkoutForm />
-            <WorkoutAction
-                id={activeWorkoutId}
-                onClose={() => setActiveWorkoutId(undefined)}
-            />
+            {typeof activeWorkoutId === 'string' ? (
+                <WorkoutAction
+                    id={activeWorkoutId}
+                    onClose={() => setActiveWorkoutId(undefined)}
+                />
+            ) : null}
             <ScrollView w="100%">
                 <List>
                     {workoutList.map((workout) => (
@@ -71,23 +78,13 @@ export default function Index() {
                                     <Heading>
                                         {formatName(workout.name)}
                                     </Heading>
-                                    <Text
-                                        color={'coolGray.400'}
-                                        _dark={{
-                                            color: 'warmGray.400'
-                                        }}
-                                    >
+                                    <Text color={'secondary'}>
                                         {workout.reps} reps, {workout.set} sets
                                     </Text>
                                 </VStack>
                                 <Center>
                                     {workout.created ? (
-                                        <Text
-                                            color={'coolGray.400'}
-                                            _dark={{
-                                                color: 'warmGray.400'
-                                            }}
-                                        >
+                                        <Text color={'secondary'}>
                                             {new Date(
                                                 workout.created
                                             ).toLocaleDateString()}

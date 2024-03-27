@@ -1,7 +1,41 @@
-import { Box, Center, Heading, Text, View } from 'native-base'
+import { Box, Card, Heading, HStack, Progress, Text, View } from 'native-base'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { TouchableOpacity } from 'react-native'
 
 import { WorkoutType } from '../service/workout'
+
+function InfoCard({
+    title,
+    children,
+    width,
+    align = 'center'
+}: {
+    title: string
+    children: React.ReactNode
+    width: 'full' | '1/2'
+    align?: 'center' | 'left' | 'right'
+}) {
+    return (
+        <TouchableOpacity
+            className={`p-4 bg-purple-200 rounded shadow-xl`}
+            style={{
+                width: width === 'full' ? '100%' : '48%'
+            }}
+        >
+            <View>
+                <Heading
+                    mb="2"
+                    size={'md'}
+                    fontWeight={'semibold'}
+                    textAlign={align}
+                >
+                    {title}
+                </Heading>
+                {children}
+            </View>
+        </TouchableOpacity>
+    )
+}
 
 export const Analytics: React.FC<{ workout: WorkoutType }> = ({ workout }) => {
     const getDuration = useCallback(() => {
@@ -49,22 +83,45 @@ export const Analytics: React.FC<{ workout: WorkoutType }> = ({ workout }) => {
     }, [workout.completed])
 
     return (
-        <Box p="4" mt="4">
-            <Heading mb="2">Analytics</Heading>
-            <Text fontSize={'lg'}>
-                Duration of workout:{' '}
-                <Text fontSize={'xl'} fontWeight={'semibold'}>
-                    {formattedDuration}
-                </Text>{' '}
-                minutes
-            </Text>
-            <Text fontSize={'lg'}>
-                Total sets:{' '}
-                <Text fontSize={'xl'} fontWeight={'semibold'}>
-                    {' '}
-                    {workout.totalSets}
-                </Text>
-            </Text>
+        <Box p="4" mt="4" className="flex flex-col gap-2">
+            <Heading mb="2">Info</Heading>
+            <View>
+                <View className="w-full mt-2">
+                    <InfoCard title="Duration" width="full" align="left">
+                        <Text className="text-2xl font-bold text-center">
+                            {formattedDuration}
+                        </Text>
+                    </InfoCard>
+                </View>
+                <View className="w-full mt-2">
+                    <InfoCard title="Progress" width="full" align="left">
+                        <Progress
+                            value={workout.set}
+                            max={workout.totalSets}
+                            colorScheme={'purple'}
+                        />
+                    </InfoCard>
+                </View>
+                <HStack
+                    style={{
+                        width: '100%',
+                        justifyContent: 'space-between',
+                        display: 'flex',
+                        marginTop: 10
+                    }}
+                >
+                    <InfoCard title="Total sets" width="1/2">
+                        <Text className="text-2xl font-bold text-center">
+                            {workout.totalSets}
+                        </Text>
+                    </InfoCard>
+                    <InfoCard title="Reps per set" width="1/2">
+                        <Text className="text-2xl font-bold text-center">
+                            {workout.reps}
+                        </Text>
+                    </InfoCard>
+                </HStack>
+            </View>
         </Box>
     )
 }

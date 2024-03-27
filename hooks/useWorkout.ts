@@ -16,6 +16,7 @@ import { UserType } from './useAuth'
 
 type WorkoutContextType = {
     createWorkout: (params: WorkoutInput, userId: string) => WorkoutType | null
+    startWorkout: (id: string) => void
     getWorkouts: (page?: number, limit?: number) => WorkoutType[]
     getWorkout: (id: string) => WorkoutType | null
     updateWorkout: (id: string, params: Partial<WorkoutInput>) => void
@@ -30,18 +31,22 @@ type WorkoutContextStoreType = {
     realm: Realm | null
     user: UserType | null
     isConnected: boolean
+    dateFilter: Date
     setRealm: (realm: Realm) => void
     setUser: (user: UserType) => void
     setIsConnected: (isConnected: boolean) => void
+    setDateFilter: (dateFilter: Date) => void
 }
 
 export const useWorkoutStore = create<WorkoutContextStoreType>((set) => ({
     realm: null,
     user: null,
     isConnected: false,
+    dateFilter: new Date(),
     setRealm: (realm) => set({ realm }),
     setUser: (user) => set({ user }),
-    setIsConnected: (isConnected) => set({ isConnected })
+    setIsConnected: (isConnected) => set({ isConnected }),
+    setDateFilter: (dateFilter) => set({ dateFilter })
 }))
 
 const useWorkout: () => WorkoutContextType = () => {
@@ -167,6 +172,16 @@ const useWorkout: () => WorkoutContextType = () => {
             }
             const resultOffline = Workout.createWorkout(params, userId, realm)
             return resultOffline
+        },
+        startWorkout: (id) => {
+            // update
+
+            if (!realm) {
+                console.log('Realm is not initialized!')
+                return
+            }
+
+            Workout.updateWorkout(id, { startedAt: new Date() }, realm)
         },
         getWorkouts: (page, limit) => {
             // read

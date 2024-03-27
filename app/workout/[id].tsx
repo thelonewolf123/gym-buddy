@@ -28,7 +28,7 @@ export default function WorkoutId() {
                     headerTitle: 'Workout Details'
                 }}
             ></Stack.Screen>
-            <WorkoutForm id={id} />
+            {workout?.completed ? null : <WorkoutForm id={id} />}
             <View>
                 {workout ? (
                     <>

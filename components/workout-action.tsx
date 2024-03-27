@@ -1,12 +1,10 @@
 import {
     Actionsheet,
     Box,
-    Button,
     Center,
-    Row,
+    HStack,
     Text,
-    useDisclose,
-    View
+    useDisclose
 } from 'native-base'
 import { useEffect, useState } from 'react'
 
@@ -58,6 +56,10 @@ export function WorkoutAction({
                         <WorkoutForm
                             id={id}
                             isOpen={actionItem.action === 'edit'}
+                            onClose={() => {
+                                setActionItem(undefined)
+                                onClose()
+                            }}
                         />
                     )
                 ))}
@@ -68,24 +70,30 @@ export function WorkoutAction({
                     onCloseEvent()
                 }}
             >
-                <Actionsheet.Content>
+                <Actionsheet.Content backgroundColor={'purple.300'}>
                     <Box w="100%" h={60} px={4} justifyContent="center">
                         <Text fontSize="16" color="gray.500">
                             Workout Actions
                         </Text>
                     </Box>
-                    <Actionsheet.Item onPress={() => actionHandler('edit')}>
-                        <Row rounded={'xl'}>
+                    <Actionsheet.Item
+                        onPress={() => actionHandler('edit')}
+                        backgroundColor={'purple.300'}
+                    >
+                        <HStack rounded={'xl'}>
                             <MaterialCommunityIcons
                                 name="pencil"
                                 size={18}
                                 bold
                             />
                             <Text px={4}>Edit</Text>
-                        </Row>
+                        </HStack>
                     </Actionsheet.Item>
-                    <Actionsheet.Item onPress={() => actionHandler('delete')}>
-                        <Row rounded={'xl'}>
+                    <Actionsheet.Item
+                        onPress={() => actionHandler('delete')}
+                        backgroundColor={'purple.300'}
+                    >
+                        <HStack rounded={'xl'}>
                             <MaterialCommunityIcons
                                 name="trash-can"
                                 size={18}
@@ -94,7 +102,7 @@ export function WorkoutAction({
                             <Text px={4} bold color={'red.500'}>
                                 Delete
                             </Text>
-                        </Row>
+                        </HStack>
                     </Actionsheet.Item>
                 </Actionsheet.Content>
             </Actionsheet>

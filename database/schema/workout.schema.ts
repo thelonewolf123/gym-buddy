@@ -18,6 +18,7 @@ export class Workout extends Realm.Object<WorkoutType> {
     updated!: Date
     sync?: boolean
     deleted?: boolean
+    startedAt?: Date
 
     static schema: Realm.ObjectSchema = {
         name: 'Workout',
@@ -30,6 +31,7 @@ export class Workout extends Realm.Object<WorkoutType> {
             notes: 'string',
             completed: 'bool',
             user: 'string',
+            startedAt: 'date?',
             created: { type: 'date', default: new Date() },
             updated: { type: 'date', default: new Date() },
             sync: { type: 'bool', default: false },

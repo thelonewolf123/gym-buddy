@@ -4,8 +4,9 @@ export type WorkoutInput = {
     name: string
     reps: number
     set: number
-    totalSets: number
     notes: string
+    totalSets: number
+    startedAt?: Date
     completed?: boolean
 }
 

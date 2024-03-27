@@ -14,10 +14,18 @@ export const Navigation: React.FC<{ children: React.ReactElement }> = ({
     }
 
     return (
-        <Box flex={1} bg="white" safeAreaTop width="100%" alignSelf="center">
+        <Box
+            flex={1}
+            bg="white"
+            safeAreaTop
+            width="100%"
+            alignSelf="center"
+            backgroundColor={'purple.300'}
+            height={'100%'}
+        >
             {children}
             <HStack
-                bg="primary.500"
+                bg="purple.500"
                 alignItems="center"
                 safeAreaBottom
                 shadow={6}
@@ -37,7 +45,9 @@ export const Navigation: React.FC<{ children: React.ReactElement }> = ({
                             color="white"
                             size="sm"
                         />
-                        <Text fontSize="12">Home</Text>
+                        <Text fontSize="12" color={'white'}>
+                            Home
+                        </Text>
                     </Center>
                 </Pressable>
                 <Pressable
@@ -55,7 +65,9 @@ export const Navigation: React.FC<{ children: React.ReactElement }> = ({
                             color="white"
                             size="sm"
                         />
-                        <Text fontSize="12">Account</Text>
+                        <Text fontSize="12" color={'white'}>
+                            Account
+                        </Text>
                     </Center>
                 </Pressable>
             </HStack>

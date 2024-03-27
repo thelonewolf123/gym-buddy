@@ -8,11 +8,11 @@ import {
     FormControl,
     Input,
     ScrollView,
-    TextArea,
+    Text,
     useDisclose
 } from 'native-base'
-import React, { useCallback, useState } from 'react'
-import { ToastAndroid } from 'react-native'
+import React, { useCallback, useEffect, useState } from 'react'
+import { TextInput, ToastAndroid } from 'react-native'
 
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 
@@ -23,10 +23,12 @@ import { WorkoutInput } from '../service/workout'
 
 export default function WorkoutForm({
     id,
-    isOpen: isOpenProp
+    isOpen: isOpenProp,
+    onClose: onCloseEvent
 }: {
     id?: string
     isOpen?: boolean
+    onClose?: () => void
 }) {
     const { user } = useAuth()
     const { isOpen, onOpen, onClose } = useDisclose()
@@ -61,6 +63,12 @@ export default function WorkoutForm({
         }))
     }
 
+    useEffect(() => {
+        if (isOpenProp) {
+            onOpen()
+        }
+    }, [isOpenProp])
+
     const handleSubmit = useCallback(() => {
         // Do something with the workout data
         if (!user) {
@@ -71,16 +79,16 @@ export default function WorkoutForm({
             updateWorkout(workoutInfo.id, workout)
             ToastAndroid.show('Workout updated', ToastAndroid.SHORT)
             onClose()
-
+            onCloseEvent?.()
             return
         }
 
         if (!workout.name || !workout.reps || !workout.totalSets) {
+            ToastAndroid.show('Please fill out all fields', ToastAndroid.SHORT)
+        } else {
             const result = createWorkout(workout, user.id)
             if (!result) return console.error('Failed to create workout')
             router.push(`/workout/${result.id}`)
-        } else {
-            ToastAndroid.show('Please fill out all fields', ToastAndroid.SHORT)
         }
     }, [createWorkout, user, workout])
 
@@ -91,16 +99,19 @@ export default function WorkoutForm({
                     renderInPortal={false}
                     shadow={2}
                     size="sm"
+                    backgroundColor={'purple.800'}
                     icon={
                         id ? (
                             <MaterialCommunityIcons
                                 name="pencil"
                                 color={'white'}
+                                size={24}
                             />
                         ) : (
                             <MaterialCommunityIcons
                                 name="plus"
                                 color={'white'}
+                                size={24}
                             />
                         )
                     }
@@ -108,29 +119,41 @@ export default function WorkoutForm({
                 />
             )}
 
-            <Actionsheet isOpen={isOpen} onClose={onClose}>
-                <Actionsheet.Content w="100%">
+            <Actionsheet
+                isOpen={isOpen}
+                onClose={() => {
+                    onClose()
+                    onCloseEvent?.()
+                }}
+            >
+                <Actionsheet.Content w="100%" backgroundColor={'purple.400'}>
                     <ScrollView w="100%" m="1">
                         <Center>
                             <Box w="90%" mt="4">
                                 <FormControl>
-                                    <FormControl.Label>
+                                    <Text className="py-2 font-semibold text-white">
                                         Workout Name
-                                    </FormControl.Label>
+                                    </Text>
                                     <Input
                                         placeholder="Name"
                                         value={workout.name}
+                                        borderColor="gray.200"
+                                        color={'white'}
+                                        placeholderTextColor={'gray.100'}
                                         onChangeText={(value) =>
                                             handleChange('name', value)
                                         }
                                     />
                                 </FormControl>
-
                                 <FormControl>
-                                    <FormControl.Label>Reps</FormControl.Label>
+                                    <Text className="py-2 font-semibold text-white">
+                                        Reps
+                                    </Text>
                                     <Input
                                         placeholder="Reps"
                                         value={workout.reps.toString()}
+                                        borderColor="gray.200"
+                                        color={'white'}
                                         onChangeText={(value) =>
                                             handleChange(
                                                 'reps',
@@ -140,14 +163,15 @@ export default function WorkoutForm({
                                         keyboardType="numeric"
                                     />
                                 </FormControl>
-
                                 <FormControl>
-                                    <FormControl.Label>
+                                    <Text className="py-2 font-semibold text-white">
                                         Total Sets
-                                    </FormControl.Label>
+                                    </Text>
                                     <Input
                                         placeholder="Total Sets"
                                         value={workout.totalSets.toString()}
+                                        borderColor="gray.200"
+                                        color={'white'}
                                         onChangeText={(value) =>
                                             handleChange(
                                                 'totalSets',
@@ -157,23 +181,11 @@ export default function WorkoutForm({
                                         keyboardType="numeric"
                                     />
                                 </FormControl>
-
-                                <FormControl>
-                                    <FormControl.Label>Notes</FormControl.Label>
-                                    <TextArea
-                                        placeholder="Notes"
-                                        value={workout.notes}
-                                        onChangeText={(value) =>
-                                            handleChange('notes', value)
-                                        }
-                                        style={{ height: 100 }}
-                                        pt={4}
-                                        autoCompleteType={'off'}
-                                    />
-                                </FormControl>
-
                                 <FormControl mt="2" mb="4">
-                                    <Button onPress={handleSubmit}>
+                                    <Button
+                                        onPress={handleSubmit}
+                                        backgroundColor={'purple.500'}
+                                    >
                                         Submit
                                     </Button>
                                 </FormControl>
