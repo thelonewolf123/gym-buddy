@@ -6,6 +6,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 import { Analytics } from '../../components/analytics'
 import { Counter } from '../../components/counter'
+import WorkoutForm from '../../components/workout-form'
 import { useGetWorkoutById } from '../../hooks/useGetWorkoutById'
 import useWorkout from '../../hooks/useWorkout'
 
@@ -27,19 +28,7 @@ export default function WorkoutId() {
                     headerTitle: 'Workout Details'
                 }}
             ></Stack.Screen>
-            <Fab
-                renderInPortal={false}
-                shadow={2}
-                size="sm"
-                backgroundColor={'red.500'}
-                icon={
-                    <MaterialCommunityIcons name="trash-can" color={'white'} />
-                }
-                onPress={() => {
-                    deleteWorkout(id)
-                    router.replace('/')
-                }}
-            />
+            <WorkoutForm id={id} />
             <View>
                 {workout ? (
                     <>

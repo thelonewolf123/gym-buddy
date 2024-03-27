@@ -2,7 +2,7 @@ import { router, usePathname } from 'expo-router'
 import { Box, Center, HStack, Icon, Pressable, Text } from 'native-base'
 import React from 'react'
 
-import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 export const Navigation: React.FC<{ children: React.ReactElement }> = ({
     children

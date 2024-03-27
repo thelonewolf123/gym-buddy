@@ -4,7 +4,7 @@ import { WorkoutRealmContext } from '../database/realm.db'
 import { Workout } from '../database/schema/workout.schema'
 import { useWorkoutStore } from './useWorkout'
 
-export function useGetWorkoutById(id: string) {
+export function useGetWorkoutById(id?: string) {
     const { user } = useWorkoutStore()
 
     const { useQuery } = useMemo(() => WorkoutRealmContext, [])
@@ -20,6 +20,8 @@ export function useGetWorkoutById(id: string) {
         },
         [user, id]
     )
+
+    if (!id) return null
 
     return workoutList.map((workout) => workout).at(0)
 }

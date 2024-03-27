@@ -1,26 +1,27 @@
-import { Redirect, router, Stack, usePathname } from 'expo-router'
+import { Redirect, router, Stack } from 'expo-router'
 import { capitalize } from 'lodash'
 import {
     Center,
-    Fab,
     Heading,
     HStack,
     List,
     ScrollView,
-    Spinner,
     Text,
     VStack
 } from 'native-base'
-import { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 
+import { WorkoutAction } from '../components/workout-action'
+import WorkoutForm from '../components/workout-form'
 import useAuth from '../hooks/useAuth'
 import { useWorkoutList } from '../hooks/useWorkoutList'
 
 export default function Index() {
     const workoutList = useWorkoutList()
     const { user } = useAuth()
+    const [activeWorkoutId, setActiveWorkoutId] = useState<string>()
 
     if (!user) {
         return <Redirect href={'/login'} />
@@ -42,12 +43,10 @@ export default function Index() {
                     headerTitle: 'Home'
                 }}
             ></Stack.Screen>
-            <Fab
-                renderInPortal={false}
-                shadow={2}
-                size="sm"
-                icon={<MaterialCommunityIcons name="plus" color={'white'} />}
-                onPress={() => router.replace('/new')}
+            <WorkoutForm />
+            <WorkoutAction
+                id={activeWorkoutId}
+                onClose={() => setActiveWorkoutId(undefined)}
             />
             <ScrollView w="100%">
                 <List>
@@ -58,6 +57,7 @@ export default function Index() {
                             onPress={() => {
                                 router.push(`/workout/${workout.id}`)
                             }}
+                            onLongPress={() => setActiveWorkoutId(workout.id)}
                         >
                             <HStack pr="4">
                                 <MaterialCommunityIcons

@@ -13,7 +13,6 @@ import {
 } from '../service/workout'
 import { uniqueId } from '../utils'
 import { UserType } from './useAuth'
-import { useConnectivity } from './useConnectivity'
 
 type WorkoutContextType = {
     createWorkout: (params: WorkoutInput, userId: string) => WorkoutType | null

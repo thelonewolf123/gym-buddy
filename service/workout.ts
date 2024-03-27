@@ -14,8 +14,8 @@ export type WorkoutType = WorkoutInput & {
     id: string
     sync?: boolean
     deleted?: boolean // soft delete
-    created: string
-    updated: string
+    created: Date
+    updated: Date
 }
 
 export function createWorkout(params: WorkoutInput, userId: string) {

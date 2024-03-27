@@ -1,19 +1,20 @@
 import { Box, Center, Heading, Text, View } from 'native-base'
-import { useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { WorkoutType } from '../service/workout'
 
 export const Analytics: React.FC<{ workout: WorkoutType }> = ({ workout }) => {
-    const getDuration = () => {
+    const getDuration = useCallback(() => {
         const start = new Date(workout.created).getTime()
         const end = workout.completed
             ? new Date(workout.updated).getTime()
             : new Date().getTime()
         const diff = end - start
         return Math.floor(diff / 1000)
-    }
+    }, [workout.created, workout.updated, workout.completed])
 
     const [duration, setDuration] = useState(getDuration)
+
     const intervalRef = useRef<NodeJS.Timeout>()
 
     const formattedDuration = useMemo(() => {
@@ -35,7 +36,7 @@ export const Analytics: React.FC<{ workout: WorkoutType }> = ({ workout }) => {
         return `${minutes}:${seconds}`
     }, [duration])
 
-    useMemo(() => {
+    useEffect(() => {
         if (workout.completed) return clearInterval(intervalRef.current)
 
         intervalRef.current = setInterval(() => {

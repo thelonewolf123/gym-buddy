@@ -14,8 +14,8 @@ export class Workout extends Realm.Object<WorkoutType> {
     notes!: string
     completed!: boolean
     user!: string
-    created!: string
-    updated!: string
+    created!: Date
+    updated!: Date
     sync?: boolean
     deleted?: boolean
 
@@ -30,10 +30,10 @@ export class Workout extends Realm.Object<WorkoutType> {
             notes: 'string',
             completed: 'bool',
             user: 'string',
-            created: 'string',
-            updated: 'string',
-            sync: 'bool?',
-            deleted: 'bool?'
+            created: { type: 'date', default: new Date() },
+            updated: { type: 'date', default: new Date() },
+            sync: { type: 'bool', default: false },
+            deleted: { type: 'bool', default: false }
         },
         primaryKey: 'id'
     }
@@ -46,8 +46,8 @@ export class Workout extends Realm.Object<WorkoutType> {
         const id = uniqueId()
         realm.write(() => {
             realm.create<WorkoutType>('Workout', {
-                created: new Date().toISOString(),
-                updated: new Date().toISOString(),
+                created: new Date(),
+                updated: new Date(),
                 user: userId,
                 id,
                 sync: false,
@@ -83,7 +83,7 @@ export class Workout extends Realm.Object<WorkoutType> {
         realm.write(() => {
             realm.create<WorkoutType>(
                 'Workout',
-                { ...params, id, updated: new Date().toISOString() },
+                { ...params, id, updated: new Date() },
                 UpdateMode.Modified
             )
         })
@@ -99,7 +99,7 @@ export class Workout extends Realm.Object<WorkoutType> {
             if (!workout) return
             realm.create<WorkoutType>(
                 'Workout',
-                { id, set: workout.set + 1, updated: new Date().toISOString() },
+                { id, set: workout.set + 1, updated: new Date() },
                 UpdateMode.Modified
             )
         })
@@ -111,7 +111,7 @@ export class Workout extends Realm.Object<WorkoutType> {
             if (!workout) return
             realm.create<WorkoutType>(
                 'Workout',
-                { id, set: workout.set - 1, updated: new Date().toISOString() },
+                { id, set: workout.set - 1, updated: new Date() },
                 UpdateMode.Modified
             )
         })
