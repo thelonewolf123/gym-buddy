@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react'
 
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 
+import { useKeyboardBottomInset } from '../hooks/useKeyboardInset'
 import { DeleteWorkout } from './delete-workout'
 import WorkoutForm from './workout-form'
 
@@ -24,6 +25,7 @@ export function WorkoutAction({
     const [actionItem, setActionItem] = useState<{
         action: 'edit' | 'delete'
     }>()
+    const bottomInset = useKeyboardBottomInset()
 
     useEffect(() => {
         if (id) {
@@ -70,7 +72,10 @@ export function WorkoutAction({
                     onCloseEvent()
                 }}
             >
-                <Actionsheet.Content backgroundColor={'purple.300'}>
+                <Actionsheet.Content
+                    backgroundColor={'purple.300'}
+                    bottom={bottomInset}
+                >
                     <Box w="100%" h={60} px={4} justifyContent="center">
                         <Text fontSize="16" color="gray.500">
                             Workout Actions

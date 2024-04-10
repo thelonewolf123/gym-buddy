@@ -1,18 +1,13 @@
-import { router, Stack, useLocalSearchParams, useRouter } from 'expo-router'
-import { Fab, Spinner, View } from 'native-base'
+import { Stack, useLocalSearchParams } from 'expo-router'
+import { Spinner, View } from 'native-base'
 import { useMemo } from 'react'
-
-import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 import { Analytics } from '../../components/analytics'
 import { Counter } from '../../components/counter'
 import WorkoutForm from '../../components/workout-form'
 import { useGetWorkoutById } from '../../hooks/useGetWorkoutById'
-import useWorkout from '../../hooks/useWorkout'
 
 export default function WorkoutId() {
-    const { deleteWorkout } = useWorkout()
-
     const params = useLocalSearchParams()
     const id = useMemo(() => {
         if (typeof params.id === 'string') return params.id

@@ -12,10 +12,9 @@ import {
     WorkoutType
 } from '../service/workout'
 import { uniqueId } from '../utils'
-import { UserType } from './useAuth'
 
 type WorkoutContextType = {
-    createWorkout: (params: WorkoutInput, userId: string) => WorkoutType | null
+    createWorkout: (params: WorkoutInput) => WorkoutType | null
     startWorkout: (id: string) => void
     getWorkouts: (page?: number, limit?: number) => WorkoutType[]
     getWorkout: (id: string) => WorkoutType | null
@@ -29,28 +28,24 @@ type WorkoutContextType = {
 
 type WorkoutContextStoreType = {
     realm: Realm | null
-    user: UserType | null
     isConnected: boolean
     dateFilter: Date
     setRealm: (realm: Realm) => void
-    setUser: (user: UserType) => void
     setIsConnected: (isConnected: boolean) => void
     setDateFilter: (dateFilter: Date) => void
 }
 
 export const useWorkoutStore = create<WorkoutContextStoreType>((set) => ({
     realm: null,
-    user: null,
     isConnected: false,
     dateFilter: new Date(),
     setRealm: (realm) => set({ realm }),
-    setUser: (user) => set({ user }),
     setIsConnected: (isConnected) => set({ isConnected }),
     setDateFilter: (dateFilter) => set({ dateFilter })
 }))
 
 const useWorkout: () => WorkoutContextType = () => {
-    const { realm, user, isConnected } = useWorkoutStore()
+    const { realm, isConnected } = useWorkoutStore()
 
     const syncToServerFn = useCallback(async () => {
         const uid = uniqueId()
@@ -66,12 +61,7 @@ const useWorkout: () => WorkoutContextType = () => {
                 return
             }
 
-            if (!user) {
-                console.log('User is not initialized!')
-                return
-            }
-
-            const workouts = Workout.getWorkouts(realm, user.id)
+            const workouts = Workout.getWorkouts(realm)
             const workoutsOnline = await getWorkouts()
 
             for (const workout of workouts) {
@@ -101,7 +91,7 @@ const useWorkout: () => WorkoutContextType = () => {
                         workout.sync = true
                         return Workout.createWorkout(
                             workout,
-                            workout.user,
+
                             realm
                         )
                     }
@@ -147,7 +137,6 @@ const useWorkout: () => WorkoutContextType = () => {
     }, [
         isConnected,
         realm,
-        user,
         Workout.createWorkout,
         Workout.deleteWorkout,
         Workout.getWorkout,
@@ -165,12 +154,12 @@ const useWorkout: () => WorkoutContextType = () => {
         syncToServer,
 
         // CRUD
-        createWorkout: (params, userId) => {
+        createWorkout: (params) => {
             if (!realm) {
                 console.log('Realm is not initialized!')
                 return null
             }
-            const resultOffline = Workout.createWorkout(params, userId, realm)
+            const resultOffline = Workout.createWorkout(params, realm)
             return resultOffline
         },
         startWorkout: (id) => {
@@ -191,11 +180,7 @@ const useWorkout: () => WorkoutContextType = () => {
                 return []
             }
 
-            if (!user) {
-                console.log('User is not initialized!')
-                return []
-            }
-            return Workout.getWorkouts(realm, user.id)
+            return Workout.getWorkouts(realm)
         },
         getWorkout: (id) => {
             // read

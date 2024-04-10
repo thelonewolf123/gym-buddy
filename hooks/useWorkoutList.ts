@@ -5,16 +5,12 @@ import { Workout } from '../database/schema/workout.schema'
 import { useWorkoutStore } from './useWorkout'
 
 export function useWorkoutList(date?: Date) {
-    const { user } = useWorkoutStore()
-
     const { useQuery } = useMemo(() => WorkoutRealmContext, [])
     const workoutList = useQuery(
         Workout,
         (realm) => {
-            if (!user) return realm.filtered('id = ""') // return empty realm
             const data = realm
                 .sorted('created', true)
-                .filtered(`user = "${user.id}"`)
                 .filtered('deleted != true')
 
             if (date) {
@@ -32,7 +28,7 @@ export function useWorkoutList(date?: Date) {
 
             return data
         },
-        [user, date]
+        [date]
     )
 
     return workoutList.map((workout) => workout)

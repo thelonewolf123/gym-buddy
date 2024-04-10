@@ -1,9 +1,8 @@
 import { Stack } from 'expo-router'
-import { extendTheme, Heading, NativeBaseProvider } from 'native-base'
+import { NativeBaseProvider } from 'native-base'
 import React, { useMemo } from 'react'
 import EventSource from 'react-native-sse'
 
-import { Navigation } from '../components/navigation'
 import RealmInit from '../components/realm-init'
 import { WorkoutRealmContext } from '../database/realm.db'
 
@@ -17,23 +16,22 @@ const Layout: React.FC<{}> = () => {
         <NativeBaseProvider>
             <RealmProvider>
                 <RealmInit />
-                <Navigation>
-                    <Stack
-                        initialRouteName="Home"
-                        screenOptions={{
-                            headerStyle: {
-                                backgroundColor: '#a855f7'
-                            },
-                            headerTintColor: '#fff',
-                            headerTitleStyle: {
-                                fontWeight: 'bold'
-                            },
-                            contentStyle: {
-                                backgroundColor: '#d8b4fe'
-                            }
-                        }}
-                    />
-                </Navigation>
+
+                <Stack
+                    initialRouteName="Home"
+                    screenOptions={{
+                        headerStyle: {
+                            backgroundColor: '#a855f7'
+                        },
+                        headerTintColor: '#fff',
+                        headerTitleStyle: {
+                            fontWeight: 'bold'
+                        },
+                        contentStyle: {
+                            backgroundColor: '#d8b4fe'
+                        }
+                    }}
+                />
             </RealmProvider>
         </NativeBaseProvider>
     )

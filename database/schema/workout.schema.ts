@@ -13,7 +13,6 @@ export class Workout extends Realm.Object<WorkoutType> {
     totalSets!: number
     notes!: string
     completed!: boolean
-    user!: string
     created!: Date
     updated!: Date
     sync?: boolean
@@ -30,7 +29,6 @@ export class Workout extends Realm.Object<WorkoutType> {
             totalSets: 'int',
             notes: 'string',
             completed: 'bool',
-            user: 'string',
             startedAt: 'date?',
             created: { type: 'date', default: new Date() },
             updated: { type: 'date', default: new Date() },
@@ -40,17 +38,12 @@ export class Workout extends Realm.Object<WorkoutType> {
         primaryKey: 'id'
     }
 
-    static createWorkout(
-        params: WorkoutInput | WorkoutType,
-        userId: string,
-        realm: Realm
-    ) {
+    static createWorkout(params: WorkoutInput | WorkoutType, realm: Realm) {
         const id = uniqueId()
         realm.write(() => {
             realm.create<WorkoutType>('Workout', {
                 created: new Date(),
                 updated: new Date(),
-                user: userId,
                 id,
                 sync: false,
                 completed: false,
@@ -61,11 +54,10 @@ export class Workout extends Realm.Object<WorkoutType> {
         return realm.objectForPrimaryKey<WorkoutType>('Workout', id)
     }
 
-    static getWorkouts(realm: Realm, userId: string): WorkoutType[] {
+    static getWorkouts(realm: Realm): WorkoutType[] {
         return realm
             .objects<WorkoutType>('Workout')
             .sorted('created', true)
-            .filtered(`user = "${userId}"`)
             .filtered('deleted != true')
             .map((workout) => workout)
     }

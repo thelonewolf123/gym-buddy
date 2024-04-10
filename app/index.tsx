@@ -16,7 +16,6 @@ import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { DatePicker } from '../components/date-picker'
 import { WorkoutAction } from '../components/workout-action'
 import WorkoutForm from '../components/workout-form'
-// import useAuth from '../hooks/useAuth'
 import { useWorkoutStore } from '../hooks/useWorkout'
 import { useWorkoutList } from '../hooks/useWorkoutList'
 
@@ -24,12 +23,7 @@ export default function Index() {
     const date = useWorkoutStore((s) => s.dateFilter)
     const workoutList = useWorkoutList(date)
 
-    // const { user } = useAuth()
     const [activeWorkoutId, setActiveWorkoutId] = useState<string>()
-
-    // if (!user) {
-    //     return <Redirect href={'/login'} />
-    // }
 
     const formatName = (name: string) => {
         name = capitalize(name).slice(0, 15)

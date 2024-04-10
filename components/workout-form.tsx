@@ -16,8 +16,8 @@ import { ToastAndroid } from 'react-native'
 
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 
-import useAuth from '../hooks/useAuth'
 import { useGetWorkoutById } from '../hooks/useGetWorkoutById'
+import { useKeyboardBottomInset } from '../hooks/useKeyboardInset'
 import useWorkout from '../hooks/useWorkout'
 import { WorkoutInput } from '../service/workout'
 
@@ -30,9 +30,9 @@ export default function WorkoutForm({
     isOpen?: boolean
     onClose?: () => void
 }) {
-    const { user } = useAuth()
     const { isOpen, onOpen, onClose } = useDisclose()
     const workoutInfo = useGetWorkoutById(id)
+    const bottomInset = useKeyboardBottomInset()
 
     const [workout, setWorkout] = useState<WorkoutInput>(() => {
         if (workoutInfo) {
@@ -70,11 +70,6 @@ export default function WorkoutForm({
     }, [isOpenProp])
 
     const handleSubmit = useCallback(() => {
-        // Do something with the workout data
-        if (!user) {
-            return
-        }
-
         if (workoutInfo) {
             updateWorkout(workoutInfo.id, workout)
             ToastAndroid.show('Workout updated', ToastAndroid.SHORT)
@@ -86,11 +81,11 @@ export default function WorkoutForm({
         if (!workout.name || !workout.reps || !workout.totalSets) {
             ToastAndroid.show('Please fill out all fields', ToastAndroid.SHORT)
         } else {
-            const result = createWorkout(workout, user.id)
+            const result = createWorkout(workout)
             if (!result) return console.error('Failed to create workout')
             router.push(`/workout/${result.id}`)
         }
-    }, [createWorkout, user, workout])
+    }, [createWorkout, workout])
 
     return (
         <>
@@ -126,7 +121,11 @@ export default function WorkoutForm({
                     onCloseEvent?.()
                 }}
             >
-                <Actionsheet.Content w="100%" backgroundColor={'purple.400'}>
+                <Actionsheet.Content
+                    w="100%"
+                    backgroundColor={'purple.400'}
+                    bottom={bottomInset}
+                >
                     <ScrollView w="100%" m="1">
                         <Center>
                             <Box w="90%" mt="4">

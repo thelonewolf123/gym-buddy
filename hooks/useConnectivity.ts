@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 
-import NetInfo, { NetInfoState } from '@react-native-community/netinfo'
+import NetInfo from '@react-native-community/netinfo'
 
 /**
  * Returns information about internet connectivity.
