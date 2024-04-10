@@ -7,10 +7,12 @@ import {
     List,
     ScrollView,
     Text,
+    View,
     VStack
 } from 'native-base'
 import React, { useState } from 'react'
-import { TouchableNativeFeedback, TouchableOpacity } from 'react-native'
+import { TouchableOpacity } from 'react-native'
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5'
 
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 
@@ -56,52 +58,59 @@ export default function Index() {
                     <Heading>No workouts</Heading>
                 </Center>
             ) : (
-                <ScrollView w="100%">
+                <ScrollView w="100%" borderWidth={0}>
                     <List>
                         {workoutList.map((workout) => (
-                            <TouchableOpacity key={workout.id}>
-                                <List.Item
-                                    w="100%"
-                                    onPress={() => {
-                                        router.push(`/workout/${workout.id}`)
-                                    }}
-                                    onLongPress={() =>
-                                        setActiveWorkoutId(workout.id)
-                                    }
+                            <List.Item
+                                w="100%"
+                                key={workout.id}
+                                mb="1"
+                                rounded={'lg'}
+                                onPress={() => {
+                                    router.push(`/workout/${workout.id}`)
+                                }}
+                                onLongPress={() =>
+                                    setActiveWorkoutId(workout.id)
+                                }
+                            >
+                                <HStack
+                                    mr="2"
+                                    p="2"
+                                    borderColor={'black'}
+                                    borderWidth={'2'}
                                     rounded={'lg'}
                                 >
-                                    <HStack pr="4">
-                                        <MaterialCommunityIcons
-                                            name="dumbbell"
-                                            size={34}
-                                            color={'#111'}
-                                        />
-                                    </HStack>
-                                    <HStack
-                                        w="80%"
-                                        className="flex justify-between"
-                                    >
-                                        <VStack className="flex flex-col gap-1">
-                                            <Heading>
-                                                {formatName(workout.name)}
-                                            </Heading>
+                                    <FontAwesomeIcon
+                                        name="dumbbell"
+                                        size={34}
+                                        color={'#111'}
+                                    />
+                                </HStack>
+
+                                <HStack
+                                    w="80%"
+                                    className="flex justify-between"
+                                >
+                                    <VStack className="flex flex-col gap-1">
+                                        <Heading>
+                                            {formatName(workout.name)}
+                                        </Heading>
+                                        <Text color={'secondary'}>
+                                            {workout.reps} reps, {workout.set}{' '}
+                                            sets
+                                        </Text>
+                                    </VStack>
+                                    <Center>
+                                        {workout.created ? (
                                             <Text color={'secondary'}>
-                                                {workout.reps} reps,{' '}
-                                                {workout.set} sets
+                                                {new Date(
+                                                    workout.created
+                                                ).toLocaleDateString()}
                                             </Text>
-                                        </VStack>
-                                        <Center>
-                                            {workout.created ? (
-                                                <Text color={'secondary'}>
-                                                    {new Date(
-                                                        workout.created
-                                                    ).toLocaleDateString()}
-                                                </Text>
-                                            ) : null}
-                                        </Center>
-                                    </HStack>
-                                </List.Item>
-                            </TouchableOpacity>
+                                        ) : null}
+                                    </Center>
+                                </HStack>
+                            </List.Item>
                         ))}
                     </List>
                 </ScrollView>
