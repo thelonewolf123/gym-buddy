@@ -8,14 +8,10 @@ import {
     List,
     ScrollView,
     Text,
-    View,
     VStack
 } from 'native-base'
 import React, { useState } from 'react'
-import { TouchableOpacity } from 'react-native'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5'
-
-import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 import { DatePicker } from '../components/date-picker'
 import { WorkoutAction } from '../components/workout-action'
