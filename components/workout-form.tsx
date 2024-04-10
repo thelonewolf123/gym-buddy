@@ -12,7 +12,7 @@ import {
     useDisclose
 } from 'native-base'
 import React, { useCallback, useEffect, useState } from 'react'
-import { TextInput, ToastAndroid } from 'react-native'
+import { ToastAndroid } from 'react-native'
 
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 

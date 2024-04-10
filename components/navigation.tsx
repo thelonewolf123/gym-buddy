@@ -13,6 +13,8 @@ export const Navigation: React.FC<{ children: React.ReactElement }> = ({
         return children
     }
 
+    return children // disable online sync temprorily
+
     return (
         <Box
             flex={1}

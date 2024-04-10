@@ -16,8 +16,8 @@ export default function RealmInit() {
         s.setUser,
         s.setIsConnected
     ])
-    const { syncToServer } = useWorkout()
-    const workoutList = useWorkoutList()
+    // const { syncToServer } = useWorkout()
+    // const workoutList = useWorkoutList()
     const isConnected = useConnectivity()
 
     useEffect(() => {
@@ -27,21 +27,21 @@ export default function RealmInit() {
         setUser(user)
     }, [realm, user, isConnected])
 
-    useEffect(() => {
-        if (!user) return
-        if (!isConnected) return
+    // useEffect(() => {
+    //     if (!user) return
+    //     if (!isConnected) return
 
-        const unsubscribe = subscribeToWorkouts(user.id, (workouts) => {
-            syncToServer()
-        })
+    //     const unsubscribe = subscribeToWorkouts(user.id, (workouts) => {
+    //         syncToServer()
+    //     })
 
-        return () => unsubscribe()
-    }, [user, subscribeToWorkouts, isConnected, syncToServer])
+    //     return () => unsubscribe()
+    // }, [user, subscribeToWorkouts, isConnected, syncToServer])
 
-    useEffect(() => {
-        if (!user) return
-        syncToServer()
-    }, [workoutList, syncToServer, user])
+    // useEffect(() => {
+    //     if (!user) return
+    //     syncToServer()
+    // }, [workoutList, syncToServer, user])
 
     return <></>
 }
