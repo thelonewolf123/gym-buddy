@@ -1,4 +1,4 @@
-import { Redirect, router, Stack } from 'expo-router'
+import { router, Stack } from 'expo-router'
 import { capitalize } from 'lodash'
 import {
     Center,
@@ -10,6 +10,7 @@ import {
     VStack
 } from 'native-base'
 import React, { useState } from 'react'
+import { TouchableNativeFeedback, TouchableOpacity } from 'react-native'
 
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 
@@ -49,47 +50,62 @@ export default function Index() {
                     onClose={() => setActiveWorkoutId(undefined)}
                 />
             ) : null}
-            <ScrollView w="100%">
-                <List>
-                    {workoutList.map((workout) => (
-                        <List.Item
-                            key={workout.id}
-                            w="100%"
-                            onPress={() => {
-                                router.push(`/workout/${workout.id}`)
-                            }}
-                            onLongPress={() => setActiveWorkoutId(workout.id)}
-                        >
-                            <HStack pr="4">
-                                <MaterialCommunityIcons
-                                    name="dumbbell"
-                                    size={34}
-                                    color={'#111'}
-                                />
-                            </HStack>
-                            <HStack w="80%" className="flex justify-between">
-                                <VStack className="flex flex-col gap-1">
-                                    <Heading>
-                                        {formatName(workout.name)}
-                                    </Heading>
-                                    <Text color={'secondary'}>
-                                        {workout.reps} reps, {workout.set} sets
-                                    </Text>
-                                </VStack>
-                                <Center>
-                                    {workout.created ? (
-                                        <Text color={'secondary'}>
-                                            {new Date(
-                                                workout.created
-                                            ).toLocaleDateString()}
-                                        </Text>
-                                    ) : null}
-                                </Center>
-                            </HStack>
-                        </List.Item>
-                    ))}
-                </List>
-            </ScrollView>
+
+            {workoutList.length === 0 ? (
+                <Center h="100%">
+                    <Heading>No workouts</Heading>
+                </Center>
+            ) : (
+                <ScrollView w="100%">
+                    <List>
+                        {workoutList.map((workout) => (
+                            <TouchableOpacity key={workout.id}>
+                                <List.Item
+                                    w="100%"
+                                    onPress={() => {
+                                        router.push(`/workout/${workout.id}`)
+                                    }}
+                                    onLongPress={() =>
+                                        setActiveWorkoutId(workout.id)
+                                    }
+                                    rounded={'lg'}
+                                >
+                                    <HStack pr="4">
+                                        <MaterialCommunityIcons
+                                            name="dumbbell"
+                                            size={34}
+                                            color={'#111'}
+                                        />
+                                    </HStack>
+                                    <HStack
+                                        w="80%"
+                                        className="flex justify-between"
+                                    >
+                                        <VStack className="flex flex-col gap-1">
+                                            <Heading>
+                                                {formatName(workout.name)}
+                                            </Heading>
+                                            <Text color={'secondary'}>
+                                                {workout.reps} reps,{' '}
+                                                {workout.set} sets
+                                            </Text>
+                                        </VStack>
+                                        <Center>
+                                            {workout.created ? (
+                                                <Text color={'secondary'}>
+                                                    {new Date(
+                                                        workout.created
+                                                    ).toLocaleDateString()}
+                                                </Text>
+                                            ) : null}
+                                        </Center>
+                                    </HStack>
+                                </List.Item>
+                            </TouchableOpacity>
+                        ))}
+                    </List>
+                </ScrollView>
+            )}
         </>
     )
 }

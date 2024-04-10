@@ -76,8 +76,11 @@ export function WorkoutAction({
                     <Box w="100%" h={60} px={4} justifyContent="center">
                         <Text fontSize="16">Workout Actions</Text>
                     </Box>
-                    <Actionsheet.Item onPress={() => actionHandler('edit')}>
-                        <HStack rounded={'xl'}>
+                    <Actionsheet.Item
+                        onPress={() => actionHandler('edit')}
+                        rounded={'lg'}
+                    >
+                        <HStack>
                             <MaterialCommunityIcons
                                 name="pencil"
                                 size={18}
@@ -86,8 +89,11 @@ export function WorkoutAction({
                             <Text px={4}>Edit</Text>
                         </HStack>
                     </Actionsheet.Item>
-                    <Actionsheet.Item onPress={() => actionHandler('delete')}>
-                        <HStack rounded={'xl'}>
+                    <Actionsheet.Item
+                        onPress={() => actionHandler('delete')}
+                        rounded={'lg'}
+                    >
+                        <HStack>
                             <MaterialCommunityIcons
                                 name="trash-can"
                                 size={18}
