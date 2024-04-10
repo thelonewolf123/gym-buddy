@@ -11,7 +11,6 @@ export type WorkoutInput = {
 }
 
 export type WorkoutType = WorkoutInput & {
-    user: string
     id: string
     sync?: boolean
     deleted?: boolean // soft delete
@@ -64,9 +63,7 @@ export function subscribeToWorkouts(
 
     pb.collection<WorkoutType>('workouts').subscribe('*', (event) => {
         console.log('Event:', event)
-        if (event.record.user === userId) {
-            callback([event.record])
-        }
+        callback([event.record])
     })
 
     return () => {
