@@ -1,6 +1,7 @@
 import { router, Stack } from 'expo-router'
 import { capitalize } from 'lodash'
 import {
+    Badge,
     Center,
     Heading,
     HStack,
@@ -101,12 +102,12 @@ export default function Index() {
                                         </Text>
                                     </VStack>
                                     <Center>
-                                        {workout.created ? (
-                                            <Text color={'secondary'}>
-                                                {new Date(
-                                                    workout.created
-                                                ).toLocaleDateString()}
-                                            </Text>
+                                        {!workout.completed ? (
+                                            <Badge
+                                                backgroundColor={'amber.500'}
+                                            >
+                                                Inprogress
+                                            </Badge>
                                         ) : null}
                                     </Center>
                                 </HStack>
