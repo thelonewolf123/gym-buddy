@@ -94,19 +94,18 @@ export default function WorkoutForm({
                     renderInPortal={false}
                     shadow={2}
                     size="sm"
-                    backgroundColor={'purple.800'}
                     icon={
                         id ? (
                             <MaterialCommunityIcons
                                 name="pencil"
-                                color={'white'}
                                 size={24}
+                                color={'white'}
                             />
                         ) : (
                             <MaterialCommunityIcons
                                 name="plus"
-                                color={'white'}
                                 size={24}
+                                color={'white'}
                             />
                         )
                     }
@@ -121,38 +120,29 @@ export default function WorkoutForm({
                     onCloseEvent?.()
                 }}
             >
-                <Actionsheet.Content
-                    w="100%"
-                    backgroundColor={'purple.400'}
-                    bottom={bottomInset}
-                >
+                <Actionsheet.Content w="100%" bottom={bottomInset}>
                     <ScrollView w="100%" m="1">
                         <Center>
                             <Box w="90%" mt="4">
                                 <FormControl>
-                                    <Text className="py-2 font-semibold text-white">
+                                    <Text className="py-2 font-semibold">
                                         Workout Name
                                     </Text>
                                     <Input
                                         placeholder="Name"
                                         value={workout.name}
-                                        borderColor="gray.200"
-                                        color={'white'}
-                                        placeholderTextColor={'gray.100'}
                                         onChangeText={(value) =>
                                             handleChange('name', value)
                                         }
                                     />
                                 </FormControl>
                                 <FormControl>
-                                    <Text className="py-2 font-semibold text-white">
+                                    <Text className="py-2 font-semibold">
                                         Reps
                                     </Text>
                                     <Input
                                         placeholder="Reps"
                                         value={workout.reps.toString()}
-                                        borderColor="gray.200"
-                                        color={'white'}
                                         onChangeText={(value) =>
                                             handleChange(
                                                 'reps',
@@ -163,14 +153,12 @@ export default function WorkoutForm({
                                     />
                                 </FormControl>
                                 <FormControl>
-                                    <Text className="py-2 font-semibold text-white">
+                                    <Text className="py-2 font-semibold">
                                         Total Sets
                                     </Text>
                                     <Input
                                         placeholder="Total Sets"
                                         value={workout.totalSets.toString()}
-                                        borderColor="gray.200"
-                                        color={'white'}
                                         onChangeText={(value) =>
                                             handleChange(
                                                 'totalSets',
@@ -181,10 +169,7 @@ export default function WorkoutForm({
                                     />
                                 </FormControl>
                                 <FormControl mt="2" mb="4">
-                                    <Button
-                                        onPress={handleSubmit}
-                                        backgroundColor={'purple.500'}
-                                    >
+                                    <Button onPress={handleSubmit}>
                                         Submit
                                     </Button>
                                 </FormControl>

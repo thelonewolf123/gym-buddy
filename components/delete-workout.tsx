@@ -36,7 +36,6 @@ export function DeleteWorkout({
                         <Button.Group space={2}>
                             <Button
                                 variant="unstyled"
-                                colorScheme="coolGray"
                                 onPress={onClose}
                                 ref={cancelRef}
                             >

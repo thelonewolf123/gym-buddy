@@ -8,16 +8,18 @@ function InfoCard({
     title,
     children,
     width,
+    color,
     align = 'center'
 }: {
     title: string
     children: React.ReactNode
     width: 'full' | '1/2'
+    color: 'bg-blue-400' | 'bg-red-400' | 'bg-purple-400'
     align?: 'center' | 'left' | 'right'
 }) {
     return (
         <TouchableOpacity
-            className={`p-4 bg-purple-200 rounded shadow-xl`}
+            className={`p-4 ${color} rounded shadow-xl`}
             style={{
                 width: width === 'full' ? '100%' : '48%'
             }}
@@ -39,7 +41,8 @@ function InfoCard({
 
 export const Analytics: React.FC<{ workout: WorkoutType }> = ({ workout }) => {
     const getDuration = useCallback(() => {
-        const start = new Date(workout.created).getTime()
+        if (!workout.startedAt) return 0
+        const start = new Date(workout.startedAt).getTime()
         const end = workout.completed
             ? new Date(workout.updated).getTime()
             : new Date().getTime()
@@ -87,18 +90,28 @@ export const Analytics: React.FC<{ workout: WorkoutType }> = ({ workout }) => {
             <Heading mb="2">Info</Heading>
             <View>
                 <View className="w-full mt-2">
-                    <InfoCard title="Duration" width="full" align="left">
+                    <InfoCard
+                        title="Duration"
+                        width="full"
+                        align="left"
+                        color="bg-red-400"
+                    >
                         <Text className="text-2xl font-bold text-center">
                             {formattedDuration}
                         </Text>
                     </InfoCard>
                 </View>
                 <View className="w-full mt-2">
-                    <InfoCard title="Progress" width="full" align="left">
+                    <InfoCard
+                        title="Progress"
+                        width="full"
+                        align="left"
+                        color="bg-blue-400"
+                    >
                         <Progress
                             value={workout.set}
                             max={workout.totalSets}
-                            colorScheme={'purple'}
+                            colorScheme="rose"
                         />
                     </InfoCard>
                 </View>
@@ -110,12 +123,20 @@ export const Analytics: React.FC<{ workout: WorkoutType }> = ({ workout }) => {
                         marginTop: 10
                     }}
                 >
-                    <InfoCard title="Total sets" width="1/2">
+                    <InfoCard
+                        title="Total sets"
+                        width="1/2"
+                        color="bg-purple-400"
+                    >
                         <Text className="text-2xl font-bold text-center">
                             {workout.totalSets}
                         </Text>
                     </InfoCard>
-                    <InfoCard title="Reps per set" width="1/2">
+                    <InfoCard
+                        title="Reps per set"
+                        width="1/2"
+                        color="bg-purple-400"
+                    >
                         <Text className="text-2xl font-bold text-center">
                             {workout.reps}
                         </Text>

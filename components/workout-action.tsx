@@ -72,19 +72,11 @@ export function WorkoutAction({
                     onCloseEvent()
                 }}
             >
-                <Actionsheet.Content
-                    backgroundColor={'purple.300'}
-                    bottom={bottomInset}
-                >
+                <Actionsheet.Content bottom={bottomInset}>
                     <Box w="100%" h={60} px={4} justifyContent="center">
-                        <Text fontSize="16" color="gray.500">
-                            Workout Actions
-                        </Text>
+                        <Text fontSize="16">Workout Actions</Text>
                     </Box>
-                    <Actionsheet.Item
-                        onPress={() => actionHandler('edit')}
-                        backgroundColor={'purple.300'}
-                    >
+                    <Actionsheet.Item onPress={() => actionHandler('edit')}>
                         <HStack rounded={'xl'}>
                             <MaterialCommunityIcons
                                 name="pencil"
@@ -94,10 +86,7 @@ export function WorkoutAction({
                             <Text px={4}>Edit</Text>
                         </HStack>
                     </Actionsheet.Item>
-                    <Actionsheet.Item
-                        onPress={() => actionHandler('delete')}
-                        backgroundColor={'purple.300'}
-                    >
+                    <Actionsheet.Item onPress={() => actionHandler('delete')}>
                         <HStack rounded={'xl'}>
                             <MaterialCommunityIcons
                                 name="trash-can"

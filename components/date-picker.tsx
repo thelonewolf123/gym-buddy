@@ -27,12 +27,11 @@ export function DatePicker() {
     }
 
     return (
-        <View className="flex flex-row items-center justify-center w-full py-2 align-baseline bg-purple-600">
-            <Text className="px-2 text-white">{date.toLocaleDateString()}</Text>
+        <View className="flex flex-row items-center justify-center w-full py-2 align-baseline">
+            <Text className="px-2">{date.toLocaleDateString()}</Text>
             <MaterialCommunityIcons
                 name="calendar"
                 size={24}
-                color={'white'}
                 onPress={() => setShow((v) => !v)}
             />
             {show ? <DateTimePicker value={date} onChange={onChange} /> : null}

@@ -17,21 +17,7 @@ const Layout: React.FC<{}> = () => {
             <RealmProvider>
                 <RealmInit />
 
-                <Stack
-                    initialRouteName="Home"
-                    screenOptions={{
-                        headerStyle: {
-                            backgroundColor: '#a855f7'
-                        },
-                        headerTintColor: '#fff',
-                        headerTitleStyle: {
-                            fontWeight: 'bold'
-                        },
-                        contentStyle: {
-                            backgroundColor: '#d8b4fe'
-                        }
-                    }}
-                />
+                <Stack initialRouteName="Home" />
             </RealmProvider>
         </NativeBaseProvider>
     )
